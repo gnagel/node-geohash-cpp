@@ -1,9 +1,9 @@
 var cgeohash = require('./build/Release/cgeohash');
 
 module.exports = {
-    encode:      cgeohash.encode,
-    decode:      cgeohash.decode,
-    decode_bbox: cgeohash.decode_bbox,
-    neighbor:    cgeohash.neighbor,
+    encode:      cgeohash.encode_js,
+    decode:      cgeohash.decode_js,
+    decode_bbox: cgeohash.decode_bbox_js,
+    neighbor:    cgeohash.neighbor_js,
 }
 

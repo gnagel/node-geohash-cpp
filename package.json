@@ -25,7 +25,7 @@
     }, 
     "scripts": {
         "preinstall": "node-gyp configure rebuild", 
-        "test": "mocha --bail --reporter spec test/"
+        "test": "node-gyp configure rebuild && mocha --recursive --bail --reporter spec ./tests/*.js"
     }, 
     "version": "1.0.0"
 }

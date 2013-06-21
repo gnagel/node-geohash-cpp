@@ -17,14 +17,14 @@ describe('GeoHash C++', function () {
 		var latlon = geohash.decode(geostr);
 		var diff   = Math.abs(latitude - latlon.latitude) < 0.0001
 		var msg    = 'Expected ' + latitude + '-' + latlon.latitude + ' to be very close'
-		assert.ok(diff, msg);
+		chai.assert.ok(diff, msg);
 	});
 
 	it('decodes string to longitude', function () {
 		var latlon = geohash.decode(geostr);
 		var diff   = Math.abs(longitude - latlon.longitude) < 0.0001
 		var msg    = 'Expected ' + longitude + '-' + latlon.longitude + ' to be very close'
-		assert.ok(diff, msg);
+		chai.assert.ok(diff, msg);
 	});
 
 	it('finds neighbor to the north', function () {

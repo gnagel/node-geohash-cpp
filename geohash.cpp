@@ -12,9 +12,6 @@
 namespace geohash {
 
 std::string encode(const double latitude, const double longitude, unsigned long numberOfChars) {
-    // Default to 9 characters
-    numberOfChars = numberOfChars >= 1 ? numberOfChars : 9;
-
     // DecodedBBox for the lat/lon + errors
     DecodedBBox bbox;
     bbox.maxlat = 90;
