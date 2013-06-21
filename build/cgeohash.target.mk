@@ -81,7 +81,9 @@ INCS_Release := \
 OBJS := \
 	$(obj).target/$(TARGET)/bindings.o \
 	$(obj).target/$(TARGET)/geohash.o \
-	$(obj).target/$(TARGET)/geohash_node_binding.o
+	$(obj).target/$(TARGET)/geohash_node_binding.o \
+	$(obj).target/$(TARGET)/geohash_node_binding_speed.o \
+	$(obj).target/$(TARGET)/geohash_obj.o
 
 # Add to the list of files we specially track dependencies for.
 all_deps += $(OBJS)

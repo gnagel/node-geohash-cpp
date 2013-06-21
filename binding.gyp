@@ -39,6 +39,8 @@
                 "bindings.cpp",
                 "geohash.cpp",
                 "geohash_node_binding.cpp",
+                "geohash_node_binding_speed.cpp",
+                "geohash_obj.cpp"
             ], 
             "target_name": "cgeohash"
         }

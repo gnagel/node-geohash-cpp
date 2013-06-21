@@ -108,3 +108,11 @@ namespace geohash {
 	    return scope.Close(cvv8::CastToJS<std::string>(neighbor_string));
 	}
 }
+
+
+void geohash_Init(v8::Handle<v8::Object> target) {
+  node::SetMethod(target, "encode_js",      geohash::encode_js);
+  node::SetMethod(target, "decode_js",      geohash::decode_js);
+  node::SetMethod(target, "decode_bbox_js", geohash::decode_bbox_js);
+  node::SetMethod(target, "neighbor_js",    geohash::neighbor_js);
+}
