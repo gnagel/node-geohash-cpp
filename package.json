@@ -23,5 +23,9 @@
     "repository": {
         "url": "https://github.com/gnagel/node-geohash-cpp"
     }, 
+    "scripts": {
+        "preinstall": "node-gyp configure rebuild", 
+        "test": "mocha --bail --reporter spec test/"
+    }, 
     "version": "1.0.0"
 }
