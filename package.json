@@ -1,0 +1,27 @@
+{
+    "author": "Glenn Nagel <glenn@mercury-wireless.com>", 
+    "contributors": [
+        {
+            "email": "classicning@gmail.com", 
+            "name": "Sun Ning"
+        }
+    ], 
+    "dependencies": {}, 
+    "description": "geohash c++ library for nodejs", 
+    "devDependencies": {
+        "chai": "1.6.1", 
+        "mocha": "1.11.0", 
+        "ngeohash": "0.2.0", 
+        "sprintf": "*"
+    }, 
+    "engines": {
+        "node": ">=v0.8.14"
+    }, 
+    "license": "MIT", 
+    "main": "./geohash", 
+    "name": "cgeohash", 
+    "repository": {
+        "url": "https://github.com/gnagel/node-geohash-cpp"
+    }, 
+    "version": "1.0.0"
+}
