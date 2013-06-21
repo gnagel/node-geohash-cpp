@@ -4,6 +4,7 @@
 
 #include "geohash.hpp"
 #include "geohash_node_binding.hpp"
+#include "geohash_node_binding_speed.hpp"
 
 
 v8::Persistent<v8::FunctionTemplate> GeoHashObject::constructor;
@@ -85,50 +86,20 @@ v8::Handle<v8::Value> GeoHashObject::Neighbor(const v8::Arguments& args) {
 
 // Used for performance testing!!
 v8::Handle<v8::Value> GeoHashObject::Test1M_Encode(const v8::Arguments& args) {
-  v8::HandleScope scope;
-
-	for(int i = 0, max = 1000*1000; i < max; i++) {
-		v8::Handle<v8::Value> output = Encode(args);
-		if (i + 1 == max)
-			return output;
-	}
-	
-	return scope.Close(v8::Undefined());
+	return geohash::test1m_encode_js(args);
 }
+
 
 v8::Handle<v8::Value> GeoHashObject::Test1M_Decode(const v8::Arguments& args) {
-  v8::HandleScope scope;
-
-	for(int i = 0, max = 1000*1000; i < max; i++) {
-		v8::Handle<v8::Value> output = Decode(args);
-		if (i + 1 == max)
-			return output;
-	}
-	
-	return scope.Close(v8::Undefined());
+	return geohash::test1m_decode_js(args);
 }
+
 
 v8::Handle<v8::Value> GeoHashObject::Test1M_DecodeBBox(const v8::Arguments& args) {
-  v8::HandleScope scope;
-
-	for(int i = 0, max = 1000*1000; i < max; i++) {
-		v8::Handle<v8::Value> output = DecodeBBox(args);
-		if (i + 1 == max)
-			return output;
-	}
-	
-	return scope.Close(v8::Undefined());
+	return geohash::test1m_decode_bbox_js(args);
 }
+
 
 v8::Handle<v8::Value> GeoHashObject::Test1M_Neighbor(const v8::Arguments& args) {
-  v8::HandleScope scope;
-
-	for(int i = 0, max = 1000*1000; i < max; i++) {
-		v8::Handle<v8::Value> output = Neighbor(args);
-		if (i + 1 == max)
-			return output;
-	}
-	
-	return scope.Close(v8::Undefined());
+	return geohash::test1m_neighbor_js(args);
 }
-
