@@ -37,7 +37,6 @@ var encode = function(latitude, longitude, numberOfChars){
 
     var mid;
     var islon = true;
-		// console.log('hash_value=' + hash_value);
     while(chars.length < numberOfChars) {
         if (islon){
             mid = (maxlon+minlon)/2;
@@ -59,11 +58,6 @@ var encode = function(latitude, longitude, numberOfChars){
             }
         }
 
-				// var line = '';
-// 				line = line + 'islon=' + islon + ', ';
-// 				line = line + 'bits=' + bits + ', ';
-// 				line = line + 'hash_value=' + hash_value + ', ';
-				
         islon = !islon;
         bits++;
 
@@ -73,10 +67,6 @@ var encode = function(latitude, longitude, numberOfChars){
             bits = 0;
             hash_value = 0;
         } 
-
-				// line = line + 'chars.length=' + chars.length + ', ';
-				// line = line + 'chars=' + chars.join('') + ', ';
-				// console.log(line);
     }
     return chars.join('')
 };
