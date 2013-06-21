@@ -1,25 +1,3 @@
-/**
- * Copyright (c) 2011, Sun Ning.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- * 
- */
 
 var BASE32_CODES = "0123456789bcdefghjkmnpqrstuvwxyz";
 var BASE32_CODES_DICT = {};
@@ -113,20 +91,6 @@ var decode = function(hash_string){
         error:{latitude:laterr, longitude:lonerr}};
 };
 
-/**
- * direction [lat, lon], i.e.
- * [1,0] - north
- * [1,1] - northeast
- * ...
- */
-var neighbor = function(hashstring, direction) {
-    var lonlat = decode(hashstring);
-    var neighbor_lat = lonlat.latitude 
-        + direction[0] * lonlat.error.latitude * 2;
-    var neighbor_lon = lonlat.longitude 
-        + direction[1] * lonlat.error.longitude * 2;
-    return encode(neighbor_lat, neighbor_lon, hashstring.length);
-}
 
 var geohash = {
     'encode': encode,
