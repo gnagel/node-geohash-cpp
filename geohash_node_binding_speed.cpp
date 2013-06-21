@@ -24,16 +24,13 @@ namespace geohash {
 				? cvv8::CastFromJS< uint32_t >(args[2])
 					: 9; // Default input
 
-
+			const uint64_t _nanoseconds = nanoseconds();
 			for(int i = 0, max = 1000*1000; i < max;  i++) {
-		    const std::string hash_string = encode(latitude, longitude, numberOfChars);
-
-				if (i + 1 == max) {
-			    return scope.Close(cvv8::CastToJS<std::string>(hash_string));
-				}
+		    encode(latitude, longitude, numberOfChars);
 			}
-	
-			return scope.Close(v8::Undefined());
+			const uint64_t _diff = nanoseconds() - _nanoseconds;
+			const double   _seconds = ((double) _diff) / ((uint64_t) 1e9);
+			return scope.Close(cvv8::CastToJS<double>(_seconds));
 	}
 
 	v8::Handle<v8::Value> test1m_decode_js(const v8::Arguments& args) {
@@ -48,29 +45,13 @@ namespace geohash {
           return _THROW_NODE_ERROR("Parameter 0 must be a valid string");
       }
 
+			const uint64_t _nanoseconds = nanoseconds();
 			for(int i = 0, max = 1000*1000; i < max;  i++) {
-		    const DecodedHash decoded_hash = decode(hash_string);
-				if (i + 1 == max) {
-			    // Return:
-			    // {
-			    //   latitude:lat,
-			    //   longitude:lon,
-			    //   error:{latitude:laterr, longitude:lonerr}
-			    // }
-			    v8::Handle<v8::Object> error(v8::Object::New());
-			    error->Set( v8::String::New("latitude"), v8::Number::New(decoded_hash.latitude_err) );
-			    error->Set( v8::String::New("longitude"), v8::Number::New(decoded_hash.longitude_err) );
-
-			    v8::Handle<v8::Object> output(v8::Object::New());
-			    output->Set( v8::String::New("latitude"), v8::Number::New(decoded_hash.latitude) );
-			    output->Set( v8::String::New("longitude"), v8::Number::New(decoded_hash.longitude) );
-			    output->Set( v8::String::New("error"), error );
-
-			    return scope.Close(output);
-				}
+		    decode(hash_string);
 			}
-	
-			return scope.Close(v8::Undefined());
+			const uint64_t _diff = nanoseconds() - _nanoseconds;
+			const double   _seconds = ((double) _diff) / ((uint64_t) 1e9);
+			return scope.Close(cvv8::CastToJS<double>(_seconds));
 	}
 	
 	v8::Handle<v8::Value> test1m_decode_bbox_js(const v8::Arguments& args) {
@@ -84,21 +65,14 @@ namespace geohash {
     if (hash_string.empty()) {
         return _THROW_NODE_ERROR("Parameter 0 must be a valid string");
     }
-		
-		for(int i = 0, max = 1000*1000; i < max;  i++) {
-	    DecodedBBox decoded_bbox = decode_bbox(hash_string);
-			if (i + 1 == max) {
-				std::list<double> list(4);
-				list.push_back(decoded_bbox.minlat);
-				list.push_back(decoded_bbox.minlon);
-				list.push_back(decoded_bbox.maxlat);
-				list.push_back(decoded_bbox.maxlon);
 
-				return scope.Close(cvv8::CastToJS< std::list<double> >(list));
-			}
+		const uint64_t _nanoseconds = nanoseconds();
+		for(int i = 0, max = 1000*1000; i < max;  i++) {
+	    decode_bbox(hash_string);
 		}
-	
-		return scope.Close(v8::Undefined());
+		const uint64_t _diff = nanoseconds() - _nanoseconds;
+		const double   _seconds = ((double) _diff) / ((uint64_t) 1e9);
+		return scope.Close(cvv8::CastToJS<double>(_seconds));
 	}
 
 	v8::Handle<v8::Value> test1m_neighbor_js(const v8::Arguments& args) {
@@ -122,16 +96,14 @@ namespace geohash {
 				directions.front(), // Only 2 elements
 				directions.back()   // Only 2 elements
 			};
-			
-			for(int i = 0, max = 1000*1000; i < max;  i++) {
-				const std::string neighbor_string = neighbor(hash_string, directions_array);
 
-				if (i + 1 == max) {
-			    return scope.Close(cvv8::CastToJS<std::string>(neighbor_string));
-				}
+			const uint64_t _nanoseconds = nanoseconds();
+			for(int i = 0, max = 1000*1000; i < max;  i++) {
+				neighbor(hash_string, directions_array);
 			}
-		
-			return scope.Close(v8::Undefined());
+			const uint64_t _diff = nanoseconds() - _nanoseconds;
+			const double   _seconds = ((double) _diff) / ((uint64_t) 1e9);
+			return scope.Close(cvv8::CastToJS<double>(_seconds));
 	}
 
 	void test1m_Init(v8::Handle<v8::Object> target) {

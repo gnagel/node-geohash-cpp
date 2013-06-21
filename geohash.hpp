@@ -17,6 +17,8 @@ struct DecodedHash {
     double longitude_err;
 };
 
+uint64_t nanoseconds();
+
 std::string encode(const double latitude, const double longitude, const unsigned long numberOfChars);
 
 DecodedHash decode(const std::string & hash_string);
