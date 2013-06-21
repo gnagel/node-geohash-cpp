@@ -2,20 +2,13 @@
 #include <node.h>
 
 #include "geohash.hpp"
+#include "geohash_node_binding.hpp"
 
-using namespace v8;
-using namespace node;
-using namespace geohash;
-
-
-void RegisterModule(Handle<Object> target) {
-    target->Set(v8::String::NewSymbol("encode_js"), v8::FunctionTemplate::New(encode_js)->GetFunction());
-
-    target->Set(v8::String::NewSymbol("decode_js"), v8::FunctionTemplate::New(decode_js)->GetFunction());
-
-    target->Set(v8::String::NewSymbol("decode_bbox_js"), v8::FunctionTemplate::New(decode_bbox_js)->GetFunction());
-
-    target->Set(v8::String::NewSymbol("neighbor_js"), v8::FunctionTemplate::New(neighbor_js)->GetFunction());
+void RegisterModule(v8::Handle<v8::Object> target) {
+    node::SetMethod(target, "encode_js",      geohash::encode_js);
+    node::SetMethod(target, "decode_js",      geohash::encode_js);
+    node::SetMethod(target, "decode_bbox_js", geohash::encode_js);
+    node::SetMethod(target, "neighbor_js",    geohash::encode_js);
 }
 
 NODE_MODULE(cgeohash, RegisterModule);

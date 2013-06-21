@@ -1,142 +1,133 @@
 #include <node.h>
+#include <v8.h>
 #include <cstdlib>
+#include <string>
 #include <iostream>
+#include <sstream>
+#include <algorithm>
+#include <iterator>
 
 #include "geohash.hpp"
 
-using namespace std;
-
-
 namespace geohash {
-	struct DecodedBBox {
-		double minlat, minlon, maxlat, maxlon;
-	};
 
-	struct DecodedHash {
-		double latitude;
-		double longitude;
-		
-		double latitude_err;
-		double longitude_err;
-	};
+std::string encode(const double latitude, const double longitude, unsigned long numberOfChars) {
+    // Default to 9 characters
+    numberOfChars = numberOfChars >= 1 ? numberOfChars : 9;
 
-	
-	std::string encode(const double latitude, const double longitude, int numberOfChars) {
-		DecodedBBox bbox;
-	    bbox.maxlat = 90;
-	    bbox.maxlon = 180;
-		bbox.minlat = -90;
-		bbox.minlon = -180;
+    // DecodedBBox for the lat/lon + errors
+    DecodedBBox bbox;
+    bbox.maxlat = 90;
+    bbox.maxlon = 180;
+    bbox.minlat = -90;
+    bbox.minlon = -180;
+    double mid        = 0;
+    bool   islon      = true;
+    int    num_bits   = 0;
+    int    hash_index = 0;
+    const std::string base32_codes = "0123456789bcdefghjkmnpqrstuvwxyz";
 
-		// Default to 9 characters
-		numberOfChars = numberOfChars >= 1 ? numberOfChars : 9;
+    std::string hash_string;
 
-	    var chars = [], bits = 0;
-	    var hash_value = 0;
+    while(hash_string.length() < numberOfChars) {
+        if (islon) {
+            mid = (bbox.maxlon + bbox.minlon) / 2;
+            if(longitude > mid) {
+                hash_index = (hash_index << 1) + 1;
+                bbox.minlon=mid;
+            } else {
+                hash_index = (hash_index << 1) + 0;
+                bbox.maxlon=mid;
+            }
+        } else {
+            mid = (bbox.maxlat + bbox.minlat) / 2;
+            if(latitude > mid ) {
+                hash_index = (hash_index << 1) + 1;
+                bbox.minlat = mid;
+            } else {
+                hash_index = (hash_index << 1) + 0;
+                bbox.maxlat = mid;
+            }
+        }
+        islon = !islon;
 
-	    var mid;
-	    var islon = true;
-	    while(chars.length < numberOfChars) {
-	        if (islon){
-	            mid = (bbox.maxlon+bbox.minlon)/2;
-	            if(longitude > mid){
-	                hash_value = (hash_value << 1) + 1;
-	                bbox.minlon=mid;
-	            } else {
-	                hash_value = (hash_value << 1) + 0;
-	                bbox.maxlon=mid;
-	            }
-	        } else {
-	            mid = (bbox.maxlat+bbox.minlat)/2;
-	            if(latitude > mid ){
-	                hash_value = (hash_value << 1) + 1;
-	                bbox.minlat = mid;
-	            } else {
-	                hash_value = (hash_value << 1) + 0;
-	                bbox.maxlat = mid;
-	            }
-	        }
-	        islon = !islon;
+        ++num_bits;
+        if (5 == num_bits) {
+            hash_string += base32_codes[hash_index];
+            num_bits   = 0;
+            hash_index = 0;
+        }
+    }
 
-	        bits++;
-	        if (bits == 5) {
-	            var code = BASE32_CODES[hash_value];
-	            chars.push(code);
-	            bits = 0;
-	            hash_value = 0;
-	        } 
-	    }
-	    return chars.join('')
-	};
+    return hash_string;
+};
 
+DecodedBBox decode_bbox(const std::string & _hash_string) {
+    // Copy of the string down-cased
+    // Wish this was ruby, then it would be simple: _hash_string.downcase();
+    std::string hash_string(_hash_string);
+    std::transform(
+        _hash_string.begin(),
+        _hash_string.end(),
+        hash_string.begin(),
+        ::tolower);
 
-	DecodedBBox decode_bbox(const std::string & hash_string) {
-		DecodedBBox output;
-	    output.maxlat = 90;
-	    output.maxlon = 180;
-		output.minlat = -90;
-		output.minlon = -180;
+    DecodedBBox output;
+    output.maxlat = 90;
+    output.maxlon = 180;
+    output.minlat = -90;
+    output.minlon = -180;
 
-	    double hash_value = 0;
-		bool islon = true;
-	    for(int i = 0, max = hash_string.size(); i < max; i++) {
-	        var code = hash_string[i].toLowerCase();
-	        hash_value = BASE32_CODES_DICT[code];
+    int char_index = 0;
+    bool islon = true;
+    const std::string base32_codes = "0123456789bcdefghjkmnpqrstuvwxyz";
 
-	        for (int bits = 4; bits >= 0; --bits) {
-	            int bit = (hash_value >> bits) & 1;
-	            if (islon) {
-	                double mid = (maxlon + minlon)/2;
-	                if(bit == 1){
-						output.minlon = mid;
-	                } else {
-	                    output.maxlon = mid;
-	                }
-	            } else {
-	                double mid = (maxlat+minlat)/2;
-	                if(bit == 1){
-	                    output.minlat = mid;
-	                } else {
-	                    output.maxlat = mid;
-	                }
-	            }
-	            islon = !islon;
-	        }
-	    }
-	    return output;
-	}
+    for(int i = 0, max = hash_string.length(); i < max; i++) {
+        char_index = base32_codes.find( hash_string[i] );
 
-
-	DecodedHash decode(const std::string & hash_string) {
-		DecodedBBox bbox = decode_bbox(hash_string);
-		DecodedHash output;
-	    output.latitude      = (bbox.minlat + bbox.maxlat) / 2;
-	    output.longitude     = (bbox.minlon + bbox.maxlon) / 2;
-	    output.latitude_err  = bbox.maxlat - output.latitude;
-	    output.longitude_err = bbox.maxlon - output.longitude;
-	    return output;
-	};
-
-
-
-   /**
-    * direction [lat, lon], i.e.
-    * [1,0] - north
-    * [1,1] - northeast
-    * ...
-    */
-   std::string neighbor(const std::string & hash_string, const direction []) {
-	   // Adjust the DecodedHash for the direction of the neighbors
-       DecodedHash lonlat = decode(hash_string);
-	   lonlat.latitude   += direction[0] * lonlat.latitude_err * 2;
-       lonlat.longitude  += direction[1] * lonlat.longitude_err * 2;
-
-       return encode(latitude, longitude, hash_string.length);
-   }
-
-	// Node.JS Hooks to GeoHash encoding
-	v8::Handle<v8::Value> encode_js(const v8::Arguments& args);
-	v8::Handle<v8::Value> decode_js(const v8::Arguments& args);
-	v8::Handle<v8::Value> decode_bbox_js(const v8::Arguments& args);
-	v8::Handle<v8::Value> neighbor_js(const v8::Arguments& args);
+        for (int bits = 4; bits >= 0; --bits) {
+            int bit = (char_index >> bits) & 1;
+            if (islon) {
+                double mid = (output.maxlon + output.minlon) / 2;
+                if(bit == 1) {
+                    output.minlon = mid;
+                } else {
+                    output.maxlon = mid;
+                }
+            } else {
+                double mid = (output.maxlat + output.minlat) / 2;
+                if(bit == 1) {
+                    output.minlat = mid;
+                } else {
+                    output.maxlat = mid;
+                }
+            }
+            islon = !islon;
+        }
+    }
+    return output;
 }
+
+DecodedHash decode(const std::string & hash_string) {
+    DecodedBBox bbox = decode_bbox(hash_string);
+    DecodedHash output;
+    output.latitude      = (bbox.minlat + bbox.maxlat) / 2;
+    output.longitude     = (bbox.minlon + bbox.maxlon) / 2;
+    output.latitude_err  = bbox.maxlat - output.latitude;
+    output.longitude_err = bbox.maxlon - output.longitude;
+    return output;
+};
+
+std::string neighbor(const std::string & hash_string, const int direction []) {
+    // Adjust the DecodedHash for the direction of the neighbors
+    DecodedHash lonlat = decode(hash_string);
+    lonlat.latitude   += direction[0] * lonlat.latitude_err * 2;
+    lonlat.longitude  += direction[1] * lonlat.longitude_err * 2;
+
+    return encode(
+               lonlat.latitude,
+               lonlat.longitude,
+               hash_string.length());
+}
+
+} // end namespace geohash

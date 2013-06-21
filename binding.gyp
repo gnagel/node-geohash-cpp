@@ -38,6 +38,7 @@
             "sources": [
                 "bindings.cpp",
                 "geohash.cpp",
+                "geohash_node_binding.cpp",
             ], 
             "target_name": "cgeohash"
         }
