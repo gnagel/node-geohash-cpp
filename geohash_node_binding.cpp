@@ -91,20 +91,17 @@ namespace geohash {
 	        return _THROW_NODE_ERROR("Takes 2 parameters: hash_string, and direction []");
 	    }
 
-      if (args[0].IsEmpty() || !args[0]->IsString()) {
+			const std::string hash_string = cvv8::CastFromJS<std::string>(args[0]);
+      if (hash_string.empty()) {
           return _THROW_NODE_ERROR("Parameter 0 must be a string");
       }
 
-      if (args[1].IsEmpty() || !args[1]->IsArray()) {
+			const std::list<uint32_t> directions = cvv8::CastFromJS<uint32_t>(directions_array);
+			if (directions.size() != 2) {
           return _THROW_NODE_ERROR("Parameter 1 must be an array with 2 numbers");
       }
-      v8::Handle<v8::Array> directions_array( v8::Array::Cast(*args[1]) );
-			if (directions_array->Length() != 2) {
-        return _THROW_NODE_ERROR("Parameter 1 must be an array with 2 numbers");
-			}
 
 			const std::string hash_string        = cvv8::CastFromJS<std::string>(args[0]);
-			const std::list<uint32_t> directions = cvv8::CastFromJS<uint32_t>(directions_array);
 			const std::string neighbor_string    = neighbor(hash_string, [directions[0], directions[1]]);
 
 	    return scope.Close(CastToJS<std::string>(neighbor_string));
