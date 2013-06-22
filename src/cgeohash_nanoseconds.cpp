@@ -1,4 +1,5 @@
 #include <node.h>
+#include <uv.h>
 #include <v8.h>
 #include <cstdlib>
 #include <string>
@@ -33,14 +34,48 @@ int clock_gettime(int clk_id, struct timespec *t){
 
 #endif
 
+
+// #if TARGET_OS_IPHONE
+// /* see: http://developer.apple.com/library/mac/#qa/qa1398/_index.html */
+// uint64_t uv_hrtime() {
+//     uint64_t time;
+//     uint64_t enano;
+//     static mach_timebase_info_data_t sTimebaseInfo;
+// 
+//     time = mach_absolute_time();
+// 
+//     if (0 == sTimebaseInfo.denom) {
+//         (void)mach_timebase_info(&sTimebaseInfo);
+//     }
+// 
+//     enano = time * sTimebaseInfo.numer / sTimebaseInfo.denom;
+// 
+//     return enano;
+// }
+// #else
+// uint64_t uv_hrtime() {
+//   uint64_t time;
+//   Nanoseconds enano;
+//   time = mach_absolute_time(); 
+//   enano = AbsoluteToNanoseconds(*(AbsoluteTime *)&time);
+//   return (*(uint64_t *)&enano);
+// }
+// #endif
+// 
+
+
+
+
+
 namespace cgeohash {
 #undef NANOSEC
 #define NANOSEC ((uint64_t) 1e9)
 	
 	uint64_t nanoseconds() {
-    struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC, &ts);
-    return (((uint64_t) ts.tv_sec) * NANOSEC + ts.tv_nsec);
+		return uv_hrtime();
+    // struct timespec ts;
+    // clock_gettime(CLOCK_MONOTONIC, &ts);
+    // return (((uint64_t) ts.tv_sec) * NANOSEC + ts.tv_nsec);
 	}
 
 	double seconds_differience_of_nanoseconds(const uint64_t _nanoseconds) {

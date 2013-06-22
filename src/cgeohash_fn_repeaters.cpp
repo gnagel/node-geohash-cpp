@@ -6,6 +6,8 @@
 #include "cgeohash_fn_repeaters.hpp"
 #include "cgeohash_nanoseconds.hpp"
 
+#include <iostream>
+
 #define _THROW_NODE_ERROR(MSG) ThrowException(v8::Exception::Error(v8::String::New(MSG)));
 
 
@@ -29,10 +31,18 @@ namespace cgeohash {
 
 			const uint64_t _nanoseconds = nanoseconds();
 			for(int i = 0; i < num_times;  i++) {
+				// std::cout << __FILE__ << ':' << __LINE__ << '=' << i << std::endl;
 		    encode(latitude, longitude, precision);
 			}
-			const double   _seconds = seconds_differience_of_nanoseconds(_nanoseconds) / num_times;
-			return scope.Close(cvv8::CastToJS<double>(_seconds));
+			// const double   _seconds = seconds_differience_of_nanoseconds(_nanoseconds) / num_times;
+			
+			return scope.Close(cvv8::CastToJS<uint64_t>((nanoseconds() - _nanoseconds) / num_times));
+			// const uint64_t _diff = (nanoseconds() - _nanoseconds) / num_times;
+			
+			// const double   _seconds = ((double) _diff) / ((uint64_t) 1e9)  ;
+			
+			// std::cout << __FILE__ << ':' << __LINE__ << " encode = " << _seconds << ", diff = " << _diff << ", runs = " << num_times << std::endl;
+			// return scope.Close(cvv8::CastToJS<double>(_seconds));
 	}
 
 	v8::Handle<v8::Value> decode_fn_repeater(const v8::Arguments& args) {
@@ -51,10 +61,12 @@ namespace cgeohash {
 
 			const uint64_t _nanoseconds = nanoseconds();
 			for(int i = 0; i < num_times;  i++) {
+				// std::cout << __FILE__ << ':' << __LINE__ << '=' << i << std::endl;
 		    decode(hash_string);
 			}
-			const double   _seconds = seconds_differience_of_nanoseconds(_nanoseconds) / num_times;
-			return scope.Close(cvv8::CastToJS<double>(_seconds));
+			return scope.Close(cvv8::CastToJS<uint64_t>((nanoseconds() - _nanoseconds) / num_times));
+			// const double   _seconds = seconds_differience_of_nanoseconds(_nanoseconds) / num_times;
+			// return scope.Close(cvv8::CastToJS<double>(_seconds));
 	}
 	
 	v8::Handle<v8::Value> decode_bbox_fn_repeater(const v8::Arguments& args) {
@@ -73,10 +85,12 @@ namespace cgeohash {
 
 		const uint64_t _nanoseconds = nanoseconds();
 		for(int i = 0; i < num_times;  i++) {
+			// std::cout << __FILE__ << ':' << __LINE__ << '=' << i << std::endl;
 	    decode_bbox(hash_string);
 		}
-		const double   _seconds = seconds_differience_of_nanoseconds(_nanoseconds) / num_times;
-		return scope.Close(cvv8::CastToJS<double>(_seconds));
+		return scope.Close(cvv8::CastToJS<uint64_t>((nanoseconds() - _nanoseconds) / num_times));
+		// const double   _seconds = seconds_differience_of_nanoseconds(_nanoseconds) / num_times;
+		// return scope.Close(cvv8::CastToJS<double>(_seconds));
 	}
 
 	v8::Handle<v8::Value> neighbor_fn_repeater(const v8::Arguments& args) {
@@ -93,9 +107,9 @@ namespace cgeohash {
           return _THROW_NODE_ERROR("Parameter 1 must be a valid string");
       }
 
-			const std::list<uint32_t> directions = cvv8::CastFromJS< std::list<uint32_t> >(args[1]);
+			const std::list<uint32_t> directions = cvv8::CastFromJS< std::list<uint32_t> >(args[i++]);
 			if (directions.size() != 2) {
-          return _THROW_NODE_ERROR("Parameter 1 must be an array with 2 numbers");
+          return _THROW_NODE_ERROR("Parameter 2 must be an array with 2 numbers");
       }
 			
 			const int directions_array [] = {
@@ -105,10 +119,12 @@ namespace cgeohash {
 
 			const uint64_t _nanoseconds = nanoseconds();
 			for(int i = 0; i < num_times;  i++) {
+				// std::cout << __FILE__ << ':' << __LINE__ << '=' << i << std::endl;
 				neighbor(hash_string, directions_array);
 			}
-			const double   _seconds = seconds_differience_of_nanoseconds(_nanoseconds) / num_times;
-			return scope.Close(cvv8::CastToJS<double>(_seconds));
+			return scope.Close(cvv8::CastToJS<uint64_t>((nanoseconds() - _nanoseconds) / num_times));
+			// const double   _seconds = seconds_differience_of_nanoseconds(_nanoseconds) / num_times;
+			// return scope.Close(cvv8::CastToJS<double>(_seconds));
 	}
 
 	void register_node_fn_repeaters(v8::Handle<v8::Object> target) {
