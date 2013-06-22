@@ -1,4 +1,5 @@
 {
+"variables": { "library_files": ["lib/cgeohash_obj.js", "lib/cgeohash_fn.js", "lib/cgeohash_obj_speed_tests.js", "lib/cgeohash_fn_speed_tests.js"] },
     "conditions": [
         [
             "OS=='win'", 
@@ -35,13 +36,15 @@
                     }
                 ]
             ], 
-            "include_dirs": [],
+            "include_dirs": ["src"],
             "sources": [
-                "bindings.cpp",
-                "geohash.cpp",
-                "geohash_node_binding.cpp",
-                "geohash_node_binding_speed.cpp",
-                "geohash_obj.cpp"
+                "src/bindings.cpp",
+                "src/cgeohash_cpp.cpp",
+                "src/cgeohash_node_fns.cpp",
+                "src/cgeohash_node_obj.cpp",
+                "src/speed_tests/cgeohash_cpp_st.cpp",
+                "src/speed_tests/cgeohash_node_fns_st.cpp",
+                "src/speed_tests/cgeohash_node_obj_st.cpp",
             ], 
             "target_name": "cgeohash"
         }
