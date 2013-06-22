@@ -55,20 +55,22 @@ v8::Handle<v8::Value> GeoHashObjectRepeater::New(const v8::Arguments& args) {
 
 
 v8::Handle<v8::Value> GeoHashObjectRepeater::Encode(const v8::Arguments& args) {
-	return geohash::encode_fn_repeater(args);
+	return encode_fn_repeater(args);
 }
 
 
 v8::Handle<v8::Value> GeoHashObjectRepeater::Decode(const v8::Arguments& args) {
-	return geohash::decode_fn_repeater(args);
+	return decode_fn_repeater(args);
 }
 
 
 v8::Handle<v8::Value> GeoHashObjectRepeater::DecodeBBox(const v8::Arguments& args) {
-	return geohash::decode_bbox_fn_repeater(args);
+	return decode_bbox_fn_repeater(args);
 }
 
 
 v8::Handle<v8::Value> GeoHashObjectRepeater::Neighbor(const v8::Arguments& args) {
-	return geohash::neighbor_fn_repeater(args);
+	return neighbor_fn_repeater(args);
+}
+
 }

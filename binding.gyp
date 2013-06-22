@@ -43,6 +43,7 @@
                 "src/cgeohash_fn.cpp",
                 "src/cgeohash_fn_repeaters.cpp",
                 "src/cgeohash_obj.cpp",
+                "src/cgeohash_obj_repeaters.cpp",
                 "src/cgeohash_nanoseconds.cpp"
             ], 
             "target_name": "cgeohash"

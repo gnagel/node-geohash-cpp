@@ -70,6 +70,12 @@ function x_faster(new_time, old_time) {
 //
 // Geo Hash Libraries for testing
 //
+var cgeohash_fn            = require('../lib/cgeohash_fn.js');
+var cgeohash_fn_repeaters  = require('../lib/cgeohash_fn_repeaters.js');
+var cgeohash_obj           = require('../lib/cgeohash_obj.js');
+var cgeohash_obj_repeaters = require('../lib/cgeohash_obj_repeaters.js');
+
+
 var geohash_c_object = new require('../geohash.js')
 	.geohash_object;
 var geohash_c_functions = require('../geohash.js');
