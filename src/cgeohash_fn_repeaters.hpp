@@ -13,7 +13,7 @@ v8::Handle<v8::Value> decode_bbox_fn_repeater(const v8::Arguments& args);
 v8::Handle<v8::Value> neighbor_fn_repeater(const v8::Arguments& args);
 
 // Register the above methods with node
-v8::Handle<v8::Value> register_node_fn_repeaters(v8::Handle<v8::Object> target);
+void register_node_fn_repeaters(v8::Handle<v8::Object> target);
 
 }
 

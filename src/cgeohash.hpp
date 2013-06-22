@@ -18,9 +18,6 @@ struct DecodedHash {
     double longitude_err;
 };
 
-// Compute nanoseconds at current time
-uint64_t nanoseconds();
-
 // Encode a pair of latitude and longitude into geohash
 std::string encode(const double latitude, const double longitude, const unsigned long precision);
 

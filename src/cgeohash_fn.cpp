@@ -1,17 +1,16 @@
 #include <v8.h>
 #include <node.h>
-#include "cvv8/detail/convert_core.hpp"
+#include "../includes/cvv8/detail/convert_core.hpp"
 
-#include "geohash.hpp"
-#include "geohash_node_binding.hpp"
+#include "cgeohash.hpp"
+#include "cgeohash_fn.hpp"
 
 #define _THROW_NODE_ERROR(MSG) ThrowException(v8::Exception::Error(v8::String::New(MSG)));
 
-
-namespace geohash {
+namespace cgeohash {
 
 	// Node.JS Hooks to GeoHash encoding
-	v8::Handle<v8::Value> encode_js(const v8::Arguments& args) {
+	v8::Handle<v8::Value> encode_fn(const v8::Arguments& args) {
 	    v8::HandleScope scope;
 
 	    if (args.Length() < 2) {
@@ -28,7 +27,7 @@ namespace geohash {
 	    return scope.Close(cvv8::CastToJS<std::string>(hash_string));
 	}
 
-	v8::Handle<v8::Value> decode_js(const v8::Arguments& args) {
+	v8::Handle<v8::Value> decode_fn(const v8::Arguments& args) {
 	    v8::HandleScope scope;
 
 	    if (args.Length() < 1) {
@@ -60,7 +59,7 @@ namespace geohash {
 	    return scope.Close(output);
 	}
 	
-	v8::Handle<v8::Value> decode_bbox_js(const v8::Arguments& args) {
+	v8::Handle<v8::Value> decode_bbox_fn(const v8::Arguments& args) {
     v8::HandleScope scope;
 
     if (args.Length() < 1) {
@@ -82,7 +81,7 @@ namespace geohash {
 		return scope.Close(cvv8::CastToJS< std::list<double> >(list));
 	}
 
-	v8::Handle<v8::Value> neighbor_js(const v8::Arguments& args) {
+	v8::Handle<v8::Value> neighbor_fn(const v8::Arguments& args) {
 	    v8::HandleScope scope;
 
 	    if (args.Length() < 2) {
@@ -107,12 +106,13 @@ namespace geohash {
 
 	    return scope.Close(cvv8::CastToJS<std::string>(neighbor_string));
 	}
+
+void register_node_fns(v8::Handle<v8::Object> target) {
+  node::SetMethod(target, "encode_fn",      encode_fn);
+  node::SetMethod(target, "decode_fn",      decode_fn);
+  node::SetMethod(target, "decode_bbox_fn", decode_bbox_fn);
+  node::SetMethod(target, "neighbor_fn",    neighbor_fn);
 }
 
-
-void geohash_Init(v8::Handle<v8::Object> target) {
-  node::SetMethod(target, "encode_js",      geohash::encode_js);
-  node::SetMethod(target, "decode_js",      geohash::decode_js);
-  node::SetMethod(target, "decode_bbox_js", geohash::decode_bbox_js);
-  node::SetMethod(target, "neighbor_js",    geohash::neighbor_js);
 }
+

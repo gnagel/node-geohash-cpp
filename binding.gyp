@@ -38,13 +38,12 @@
             ], 
             "include_dirs": ["src"],
             "sources": [
-                "src/bindings.cpp",
-                "src/cgeohash_cpp.cpp",
-                "src/cgeohash_node_fns.cpp",
-                "src/cgeohash_node_obj.cpp",
-                "src/speed_tests/cgeohash_cpp_st.cpp",
-                "src/speed_tests/cgeohash_node_fns_st.cpp",
-                "src/speed_tests/cgeohash_node_obj_st.cpp",
+                "src/cgeohash_bindings.cpp",
+                "src/cgeohash.cpp",
+                "src/cgeohash_fn.cpp",
+                "src/cgeohash_fn_repeaters.cpp",
+                "src/cgeohash_obj.cpp",
+                "src/cgeohash_nanoseconds.cpp"
             ], 
             "target_name": "cgeohash"
         }

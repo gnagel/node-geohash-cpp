@@ -7,39 +7,12 @@
 #include <algorithm>
 #include <iterator>
 
-#include "geohash.hpp"
+#include "cgeohash.hpp"
 
-// http://stackoverflow.com/a/17112198
-#ifdef __MACH__
-#include <mach/mach_time.h>
-#define CLOCK_REALTIME 0
-#define CLOCK_MONOTONIC 0
-int clock_gettime(int clk_id, struct timespec *t){
-    mach_timebase_info_data_t timebase;
-    mach_timebase_info(&timebase);
-    uint64_t time;
-    time = mach_absolute_time();
-    double nseconds = ((double)time * (double)timebase.numer)/((double)timebase.denom);
-    double seconds = ((double)time * (double)timebase.numer)/((double)timebase.denom * 1e9);
-    t->tv_sec = seconds;
-    t->tv_nsec = nseconds;
-    return 0;
-}
-#else
-#include <time.h>
-#endif
 
-namespace geohash {
-#undef NANOSEC
-#define NANOSEC ((uint64_t) 1e9)
-	
-	uint64_t nanoseconds() {
-    struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC, &ts);
-    return (((uint64_t) ts.tv_sec) * NANOSEC + ts.tv_nsec);
-	}
+namespace cgeohash {
 
-std::string encode(const double latitude, const double longitude, unsigned long numberOfChars) {
+std::string encode(const double latitude, const double longitude, unsigned long precision) {
     // DecodedBBox for the lat/lon + errors
     DecodedBBox bbox;
     bbox.maxlat = 90;
@@ -54,7 +27,7 @@ std::string encode(const double latitude, const double longitude, unsigned long 
 
     std::string hash_string;
 
-    while(hash_string.length() < numberOfChars) {
+    while(hash_string.length() < precision) {
         if (islon) {
             mid = (bbox.maxlon + bbox.minlon) / 2;
             if(longitude > mid) {
@@ -155,4 +128,4 @@ std::string neighbor(const std::string & hash_string, const int direction []) {
                hash_string.length());
 }
 
-} // end namespace geohash
+} // end namespace cgeohash
