@@ -35,6 +35,7 @@
                     }
                 ]
             ], 
+            "include_dirs": [],
             "sources": [
                 "bindings.cpp",
                 "geohash.cpp",
