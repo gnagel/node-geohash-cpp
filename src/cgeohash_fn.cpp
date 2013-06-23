@@ -72,7 +72,7 @@ namespace cgeohash {
     }
 
     DecodedBBox decoded_bbox = decode_bbox(hash_string);
-		std::list<double> list(4);
+		std::list<double> list;
 		list.push_back(decoded_bbox.minlat);
 		list.push_back(decoded_bbox.minlon);
 		list.push_back(decoded_bbox.maxlat);
