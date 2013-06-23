@@ -1,5 +1,5 @@
 var shared_spec = require('./shared_spec');
-var geohash_js  = require('./geohash_original.js');
+var geohash_js  = require('../lib/cgeohash_original');
 
 // 
 // geohash.test1m_encode = function(a, b, c) {
