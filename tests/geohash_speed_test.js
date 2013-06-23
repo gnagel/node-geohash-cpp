@@ -20,9 +20,8 @@ function seconds_per_call(callback) {
 	var time = process.hrtime(); // Start
 	callback(); // Execute 
 	var diff = process.hrtime(time); // Stop
-	var seconds = diff[0].valueOf() + diff[1].valueOf() / (1000 * 1000 * 1000);
-
-	return seconds / (1000 * 1000);
+	var nanoseconds = diff[0].valueOf() * 1000 * 1000 * 1000 + diff[1].valueOf();
+	return nanoseconds / (1000 * 1000 * 1000);
 };
 
 function wrap_loop_1M_in_js(callback, validates) {
@@ -115,7 +114,7 @@ describe('Speed Tests', function() {
 				// Javascript <-> C++ Object
 				js_vs_c_object: seconds_per_call(cpp),
 				// C++ Only
-				cpp_vs_c_object: cpp(),
+				cpp_vs_c_object: seconds_per_call(cpp),
 			};
 			var times_faster = {
 				js_vs_src:        1.0, // Ratio to self is always 1
@@ -124,12 +123,12 @@ describe('Speed Tests', function() {
 				cpp_vs_c_object:  x_faster(seconds.cpp_vs_c_object  , seconds.js_vs_src),
 			}
 
-			var seconds_s      = JSON.stringify(seconds);
-			var times_faster_to_s = JSON.stringify(times_faster);
-			if (process.env.VERBOSE) {
+			var seconds_s      = JSON.stringify(seconds, undefined, 2);
+			var times_faster_to_s = JSON.stringify(times_faster, undefined, 2);
+			// if (process.env.VERBOSE) {
 				console.log(tag + ': times_faster=' + times_faster_to_s);
 				console.log(tag + ': seconds=' + seconds_s);
-			}
+			// }
 
 			describe('[X times Faster]', function() {
 				it('JS <-> JS Original Version compared to self should be 1.0', function() {
@@ -158,38 +157,38 @@ describe('Speed Tests', function() {
 	compare_ratios('encodes latitude & longitude as string',
 		function() { return encode_latitude_and_longitude_as_string(geohash_original); },
 		function() { return encode_latitude_and_longitude_as_string(geohash_c_functions); },
-		function() { return geohash_c_object.test1m_encode(latitude, longitude, 9) / 1000000000; },
+		function() { return geohash_c_object.test1m_encode(latitude, longitude, 9); },
 		function(data) { data.should.equal(geostr); });
 
-	compare_ratios('decodes string to latitude',
-		function() { return decodes_string_to_latitude(geohash_original); },
-		function() { return decodes_string_to_latitude(geohash_c_functions); },
-		function() { return geohash_c_object.test1m_decode(geostr) / 1000000000; },
-		function(data) {
-			var diff = Math.abs(latitude - data) < 0.0001
-			var msg = 'Expected ' + latitude + '-' + data + ' to be very close'
-			chai.assert.ok(diff, msg);
-		});
-
-	compare_ratios('decodes string to longitude',
-		function() { return decodes_string_to_longitude(geohash_original); },
-		function() { return decodes_string_to_longitude(geohash_c_functions); },
-		function() { return geohash_original.test1m_decode(geostr) / 1000000000; },
-		function(data) {
-			var diff = Math.abs(longitude - data) < 0.0001
-			var msg = 'Expected ' + longitude + '-' + data + ' to be very close'
-			chai.assert.ok(diff, msg);
-		});
-
-	compare_ratios('finds neighbor to the north',
-		function() { return finds_neighbor_to_the_north(geohash_original); },
-		function() { return finds_neighbor_to_the_north(geohash_c_functions); },
-		function() { return geohash_c_object.test1m_neighbor('dqcjq', [1, 0]) / 1000000000; },
-		function(data) { data.should.equal('dqcjw'); });
-
-	compare_ratios('finds neighbor to the south-west',
-		function() { return finds_neighbor_to_the_south_west(geohash_original); },
-		function() { return finds_neighbor_to_the_south_west(geohash_c_functions); },
-		function() { return geohash_c_object.test1m_neighbor('dqcjq', [-1, - 1]) / 1000000000; },
-		function(data) { data.should.equal('dqcjj'); });
+	// compare_ratios('decodes string to latitude',
+	// 	function() { return decodes_string_to_latitude(geohash_original); },
+	// 	function() { return decodes_string_to_latitude(geohash_c_functions); },
+	// 	function() { return geohash_c_object.test1m_decode(geostr); },
+	// 	function(data) {
+	// 		var diff = Math.abs(latitude - data) < 0.0001
+	// 		var msg = 'Expected ' + latitude + '-' + data + ' to be very close'
+	// 		chai.assert.ok(diff, msg);
+	// 	});
+	// 
+	// compare_ratios('decodes string to longitude',
+	// 	function() { return decodes_string_to_longitude(geohash_original); },
+	// 	function() { return decodes_string_to_longitude(geohash_c_functions); },
+	// 	function() { return geohash_original.test1m_decode(geostr); },
+	// 	function(data) {
+	// 		var diff = Math.abs(longitude - data) < 0.0001
+	// 		var msg = 'Expected ' + longitude + '-' + data + ' to be very close'
+	// 		chai.assert.ok(diff, msg);
+	// 	});
+	// 
+	// compare_ratios('finds neighbor to the north',
+	// 	function() { return finds_neighbor_to_the_north(geohash_original); },
+	// 	function() { return finds_neighbor_to_the_north(geohash_c_functions); },
+	// 	function() { return geohash_c_object.test1m_neighbor('dqcjq', [1, 0]); },
+	// 	function(data) { data.should.equal('dqcjw'); });
+	// 
+	// compare_ratios('finds neighbor to the south-west',
+	// 	function() { return finds_neighbor_to_the_south_west(geohash_original); },
+	// 	function() { return finds_neighbor_to_the_south_west(geohash_c_functions); },
+	// 	function() { return geohash_c_object.test1m_neighbor('dqcjq', [-1, - 1]); },
+	// 	function(data) { data.should.equal('dqcjj'); });
 });

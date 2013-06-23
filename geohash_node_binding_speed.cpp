@@ -1,5 +1,6 @@
 #include <v8.h>
 #include <node.h>
+#include <iostream>
 #include "cvv8/detail/convert_core.hpp"
 
 #include "geohash.hpp"
@@ -14,22 +15,25 @@ namespace geohash {
 	v8::Handle<v8::Value> test1m_encode_js(const v8::Arguments& args) {
 	    v8::HandleScope scope;
 
-	    if (args.Length() < 2) {
-	        return _THROW_NODE_ERROR("Takes 3 parameters: latitude, longitude, and numberOfChars");
-	    }
-
-			const double latitude           = cvv8::CastFromJS< double >(args[0]);
-			const double longitude          = cvv8::CastFromJS< double >(args[1]);
-			const uint32_t numberOfChars    = args.Length() == 3 
-				? cvv8::CastFromJS< uint32_t >(args[2])
-					: 9; // Default input
+			// 	    if (args.Length() < 2) {
+			// 	        return _THROW_NODE_ERROR("Takes 3 parameters: latitude, longitude, and numberOfChars");
+			// 	    }
+			// 
+			// const double latitude           = cvv8::CastFromJS< double >(args[0]);
+			// const double longitude          = cvv8::CastFromJS< double >(args[1]);
+			// const uint32_t numberOfChars    = args.Length() == 3 
+			// 	? cvv8::CastFromJS< uint32_t >(args[2])
+			// 		: 9; // Default input
+			
 
 			const uint64_t _nanoseconds = nanoseconds();
 			for(int i = 0, max = 1000*1000; i < max;  i++) {
-		    encode(latitude, longitude, numberOfChars);
+		    encode(37.8324, 112.5584, 9);
 			}
 			const uint64_t _diff = nanoseconds() - _nanoseconds;
 			const double   _seconds = ((double) _diff) / ((uint64_t) 1e9);
+			
+			std::cout << "test1m_encode_js = " << _seconds << std::endl;
 			return scope.Close(cvv8::CastToJS<double>(_seconds));
 	}
 

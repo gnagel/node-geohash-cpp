@@ -1,4 +1,5 @@
 #include <node.h>
+#include <uv.h>
 #include <v8.h>
 #include <cstdlib>
 #include <string>
@@ -9,35 +10,49 @@
 
 #include "geohash.hpp"
 
-// http://stackoverflow.com/a/17112198
-#ifdef __MACH__
-#include <mach/mach_time.h>
-#define CLOCK_REALTIME 0
-#define CLOCK_MONOTONIC 0
-int clock_gettime(int clk_id, struct timespec *t){
-    mach_timebase_info_data_t timebase;
-    mach_timebase_info(&timebase);
-    uint64_t time;
-    time = mach_absolute_time();
-    double nseconds = ((double)time * (double)timebase.numer)/((double)timebase.denom);
-    double seconds = ((double)time * (double)timebase.numer)/((double)timebase.denom * 1e9);
-    t->tv_sec = seconds;
-    t->tv_nsec = nseconds;
-    return 0;
-}
-#else
-#include <time.h>
-#endif
 
 namespace geohash {
-#undef NANOSEC
 #define NANOSEC ((uint64_t) 1e9)
 	
 	uint64_t nanoseconds() {
-    struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC, &ts);
-    return (((uint64_t) ts.tv_sec) * NANOSEC + ts.tv_nsec);
+		uint64_t _nanoseconds = uv_hrtime();
+		// std::cout << "nanoseconds=" << _nanoseconds << std::endl;
+		return _nanoseconds;
 	}
+
+const char base32_codes[] = {
+	'0',
+	'1',
+	'2',
+	'3',
+	'4',
+	'5',
+	'6',
+	'7',
+	'8',
+	'9',
+	'b',
+	'c',
+	'd',
+	'e',
+	'f',
+	'g',
+	'h',
+	'j',
+	'k',
+	'm',
+	'n',
+	'p',
+	'q',
+	'r',
+	's',
+	't',
+	'u',
+	'v',
+	'w',
+	'x',
+	'y',
+	'z'};
 
 std::string encode(const double latitude, const double longitude, unsigned long numberOfChars) {
     // DecodedBBox for the lat/lon + errors
@@ -50,11 +65,12 @@ std::string encode(const double latitude, const double longitude, unsigned long 
     bool   islon      = true;
     int    num_bits   = 0;
     int    hash_index = 0;
-    const std::string base32_codes = "0123456789bcdefghjkmnpqrstuvwxyz";
 
-    std::string hash_string;
+    std::string hash_string(numberOfChars, ' ');
+		// hash_string.reserve(numberOfChars);
+		int hash_string_length = 0;
 
-    while(hash_string.length() < numberOfChars) {
+    while(hash_string_length< numberOfChars) {
         if (islon) {
             mid = (bbox.maxlon + bbox.minlon) / 2;
             if(longitude > mid) {
@@ -78,12 +94,15 @@ std::string encode(const double latitude, const double longitude, unsigned long 
 
         ++num_bits;
         if (5 == num_bits) {
-            hash_string += base32_codes[hash_index];
-            num_bits   = 0;
+					char c = base32_codes[hash_index];
+					// hash_string.push_back(c);
+					hash_string[hash_string_length] = c;
+					hash_string_length++;
+					num_bits   = 0;
             hash_index = 0;
         }
     }
-
+		
     return hash_string;
 };
 
@@ -105,10 +124,16 @@ DecodedBBox decode_bbox(const std::string & _hash_string) {
 
     int char_index = 0;
     bool islon = true;
-    const std::string base32_codes = "0123456789bcdefghjkmnpqrstuvwxyz";
+    // const std::string base32_codes = "0123456789bcdefghjkmnpqrstuvwxyz";
 
     for(int i = 0, max = hash_string.length(); i < max; i++) {
-        char_index = base32_codes.find( hash_string[i] );
+			char c = hash_string[i];
+			if (c >= '0' && c <= '9') {
+				char_index = base32_codes[c - '0'];
+			} else {
+				char_index = base32_codes[c - 'a'];
+			}
+        // char_index = base32_codes.find( hash_string[i] );
 
         for (int bits = 4; bits >= 0; --bits) {
             int bit = (char_index >> bits) & 1;
