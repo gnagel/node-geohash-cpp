@@ -68,7 +68,7 @@ std::string encode(const double latitude, const double longitude, unsigned long 
 
     std::string hash_string(numberOfChars, ' ');
 		// hash_string.reserve(numberOfChars);
-		int hash_string_length = 0;
+		unsigned int hash_string_length = 0;
 
     while(hash_string_length< numberOfChars) {
         if (islon) {

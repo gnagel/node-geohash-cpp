@@ -5,6 +5,7 @@
 
 #include "geohash.hpp"
 #include "geohash_node_binding.hpp"
+// #include <v8-profiler.h>
 
 #define _THROW_NODE_ERROR(MSG) ThrowException(v8::Exception::Error(v8::String::New(MSG)));
 
@@ -24,7 +25,9 @@ namespace geohash {
 			// const uint32_t numberOfChars    = args.Length() == 3 
 			// 	? cvv8::CastFromJS< uint32_t >(args[2])
 			// 		: 9; // Default input
-			
+
+			// v8::Handle<v8::String> title(v8::String::New("test1m_encode_js"));
+			// v8::CpuProfiler::StartProfiling(title);
 
 			const uint64_t _nanoseconds = nanoseconds();
 			for(int i = 0, max = 1000*1000; i < max;  i++) {
@@ -35,6 +38,14 @@ namespace geohash {
 			
 			std::cout << "test1m_encode_js = " << _seconds << std::endl;
 			return scope.Close(cvv8::CastToJS<double>(_seconds));
+			
+			// const v8::CpuProfile* profile = v8::CpuProfiler::StopProfiling(title);
+			// double milliseconds = profile->GetTopDownRoot()->GetTotalTime();
+			// 
+			// std::cout << "test1m_encode_js = " << _seconds << " vs " << milliseconds << std::endl;
+			// 
+			// return scope.Close(cvv8::CastToJS<double>(milliseconds));
+			//   // return scope.Close(Profile::New(profile));
 	}
 
 	v8::Handle<v8::Value> test1m_decode_js(const v8::Arguments& args) {
