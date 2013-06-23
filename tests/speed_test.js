@@ -15,7 +15,8 @@ function compare_ratios(tag, timings) {
 	describe(tag, function() {
 		// Clear the profiles
 		v8_profiler_table.reset_profiles();
-		
+
+			// Log the run-times of the Original and C++ versions
 		v8_profiler_table.record_profile('Original JS Version', timings.original_in_js);
 		v8_profiler_table.record_profile('All C++ Version',     timings.fn_in_cpp);
 		

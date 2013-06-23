@@ -13,65 +13,66 @@
 
 namespace cgeohash {
 
-	// Static array of 0-9, a-z
-	const char base32_codes[] = {
-		'0',
-		'1',
-		'2',
-		'3',
-		'4',
-		'5',
-		'6',
-		'7',
-		'8',
-		'9',
-		'b',
-		'c',
-		'd',
-		'e',
-		'f',
-		'g',
-		'h',
-		'j',
-		'k',
-		'm',
-		'n',
-		'p',
-		'q',
-		'r',
-		's',
-		't',
-		'u',
-		'v',
-		'w',
-		'x',
-		'y',
-		'z'};
-		
-		// Build a map of characters -> index position from the above array
-		const std::map<char, int> build_base32_indexes();
-		const std::map<char, int> base32_indexes = build_base32_indexes();
-		
-		// Reverse map of characters --> index position
-		const std::map<char, int> build_base32_indexes() {
-			std::map<char, int> output;
-			
-			for(int i = 0, max = 36; i < max; i++) {
-				output.insert( std::pair<char, int>(base32_codes[i], i) );
-			}
-			
-			return output;
-		}
+// Static array of 0-9, a-z
+const char base32_codes[] = {
+    '0',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    'b',
+    'c',
+    'd',
+    'e',
+    'f',
+    'g',
+    'h',
+    'j',
+    'k',
+    'm',
+    'n',
+    'p',
+    'q',
+    'r',
+    's',
+    't',
+    'u',
+    'v',
+    'w',
+    'x',
+    'y',
+    'z'
+};
 
-		// Convert the index position to the character in the array
-		char base32_codes_value_of(int index) {
-			return base32_codes[index];
-		}
-		
-		// Convert the character to the index position in the array
-		int base32_codes_index_of(char c) {
-			return base32_indexes.find(c)->second;
-		}
+// Build a map of characters -> index position from the above array
+const std::map<char, int> build_base32_indexes();
+const std::map<char, int> base32_indexes = build_base32_indexes();
+
+// Reverse map of characters --> index position
+const std::map<char, int> build_base32_indexes() {
+    std::map<char, int> output;
+
+    for(int i = 0, max = 36; i < max; i++) {
+        output.insert( std::pair<char, int>(base32_codes[i], i) );
+    }
+
+    return output;
+}
+
+// Convert the index position to the character in the array
+char base32_codes_value_of(int index) {
+    return base32_codes[index];
+}
+
+// Convert the character to the index position in the array
+int base32_codes_index_of(char c) {
+    return base32_indexes.find(c)->second;
+}
 
 std::string encode(const double latitude, const double longitude, unsigned long precision) {
     // DecodedBBox for the lat/lon + errors
@@ -85,9 +86,9 @@ std::string encode(const double latitude, const double longitude, unsigned long 
     int    num_bits   = 0;
     int    hash_index = 0;
 
-		// Pre-Allocate the hash string
+    // Pre-Allocate the hash string
     std::string hash_string(precision, ' ');
-		unsigned int hash_string_length = 0;
+    unsigned int hash_string_length = 0;
 
     while(hash_string_length< precision) {
         if (islon) {
@@ -113,15 +114,13 @@ std::string encode(const double latitude, const double longitude, unsigned long 
 
         ++num_bits;
         if (5 == num_bits) {
-					// Append the character to the pre-allocated string
-					// This gives us roughly a 2x speed boost
-					hash_string[hash_string_length] = base32_codes_value_of(hash_index);
+            // Append the character to the pre-allocated string
+            // This gives us roughly a 2x speed boost
+            // hash_string[hash_string_length] = base32_codes_value_of(hash_index);
 
-					// std::cout << hash_string[hash_string_length] << " <- " << hash_index << std::endl;
-					
-					hash_string_length++;
-					num_bits   = 0;
-           hash_index = 0;
+            hash_string_length++;
+            num_bits   = 0;
+            hash_index = 0;
         }
     }
 
@@ -148,7 +147,6 @@ DecodedBBox decode_bbox(const std::string & _hash_string) {
 
     for(int i = 0, max = hash_string.length(); i < max; i++) {
         int char_index = base32_codes_index_of(hash_string[i]);
-				// std::cout << hash_string[i] << " -> " << char_index << std::endl;
 
         for (int bits = 4; bits >= 0; --bits) {
             int bit = (char_index >> bits) & 1;
