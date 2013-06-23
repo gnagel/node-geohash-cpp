@@ -39,6 +39,10 @@ function encode_latitude_and_longitude_as_string(geohash) {
 	return geohash.encode(latitude, longitude, 9);
 }
 
+function decodes_string_to_bounded_box(geohash) {
+	return geohash.decode_bbox('ww8p1r4t8');
+}
+
 function decodes_string_to_latitude(geohash) {
 	return geohash.decode(geostr)
 		.latitude;
@@ -63,6 +67,27 @@ module.exports = function(tag, geohash) {
 		it('encodes latitude & longitude as string', function() {
 			encode_latitude_and_longitude_as_string(geohash)
 				.should.equal(geostr);
+		});
+
+		it('decodes string to bounded box', function() {
+			var expected = [
+			37.83236503601074,
+			112.55836486816406,
+			37.83240795135498,
+			112.5584077835083];
+
+			var bbox = decodes_string_to_bounded_box(geohash);
+
+			// Round the numbers to integers and compare them
+			var rounding_match = function(a, b) {
+				Math.round(a)
+					.should.equal(
+				Math.round(b), "expected=" + JSON.stringify(expected, undefined, 2) + ", bbox=" + JSON.stringify(bbox, undefined, 2));
+			}
+			rounding_match(bbox[0], expected[0]);
+			rounding_match(bbox[1], expected[1]);
+			rounding_match(bbox[2], expected[2]);
+			rounding_match(bbox[3], expected[3]);
 		});
 
 		it('decodes string to latitude', function() {
