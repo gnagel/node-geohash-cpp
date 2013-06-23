@@ -13,7 +13,7 @@
         "mocha": "1.11.0", 
         "ngeohash": "0.2.0", 
         "sprintf": "*",
-				"v8-profiler-table": ">=1.1.0"
+				"v8-profiler-table": ">=1.2.0"
     }, 
     "engines": {
         "node": ">=v0.8.14"

@@ -17,25 +17,10 @@ namespace cgeohash {
 	v8::Handle<v8::Value> encode_fn_repeater(const v8::Arguments& args) {
 	    v8::HandleScope scope;
 
-	    // if (args.Length() < 3) {
-	    //     return _THROW_NODE_ERROR("Takes 4 parameters: num_times, latitude, longitude, and precision");
-	    // }
-
-		// int i = 0;
-		// const int num_times = cvv8::CastFromJS< int >(args[i++]);
-		// 	const double latitude           = cvv8::CastFromJS< double >(args[i++]);
-		// 	const double longitude          = cvv8::CastFromJS< double >(args[i++]);
-		// 	const uint32_t precision    = args.Length() == 3 
-		// 		? cvv8::CastFromJS< uint32_t >(args[i++])
-		// 			: 9; // Default input
-
-			// const uint64_t _nanoseconds = nanoseconds();
 			for(int i = 0; i < 1e6;  i++) {
-		    // encode(latitude, longitude, precision);
 				encode(37.8324, 112.5584, 9);
 			}
 			
-			// return scope.Close(cvv8::CastToJS<uint64_t>((nanoseconds() - _nanoseconds) / num_times));
 			return scope.Close(v8::Undefined());
 	}
 

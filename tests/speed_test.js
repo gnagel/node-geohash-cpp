@@ -28,15 +28,16 @@ function compare_ratios(tag, timings) {
 			// Sanity checks
 			profile.title.should.equal('Original JS Version');
 			profile.ratio_to_base.should.equal(1);
+			chai.assert.ok(profile.total_seconds <= 1.00, JSON.stringify(profile, undefined, 2));
 		});
 		
-		it ('All C++ Version', function() {
+		it ('All C++ Version is at least 1.5x as fast', function() {
 			var profile = v8_profiler_table.profiles()['All C++ Version'];
 			
 			// Sanity checks
 			profile.title.should.equal('All C++ Version');
-			chai.assert.ok(profile.ratio_to_base >= 1.0, JSON.stringify(profile, undefined, 2));
-			chai.assert.ok(profile.total_seconds <= 0.5, JSON.stringify(profile, undefined, 2));
+			chai.assert.ok(profile.ratio_to_base >= 1.50, JSON.stringify(profile, undefined, 2));
+			chai.assert.ok(profile.total_seconds <= 0.50, JSON.stringify(profile, undefined, 2));
 		});
 	});
 };
@@ -62,72 +63,72 @@ describe('Speed Tests', function() {
 		original_in_js: function() { 
 			return orig_repeaters.repeat_in_js.encode(num_runs, 37.8324, 112.5584, 9);
 		},
-		obj_in_js: function() { 
-			return obj_repeaters.repeat_in_js.encode(num_runs, 37.8324, 112.5584, 9);
-		},
-		obj_in_cpp: function() { 
-			return obj_repeaters.repeat_in_cpp.encode(num_runs, 37.8324, 112.5584, 9);
-		},
-		fn_in_js: function() { 
-			return fn_repeaters.repeat_in_js.encode(num_runs, 37.8324, 112.5584, 9);
-		},
 		fn_in_cpp: function() { 
 			return fn_repeaters.repeat_in_cpp.encode(num_runs, 37.8324, 112.5584, 9);
 		},
+		// obj_in_js: function() { 
+		// 	return obj_repeaters.repeat_in_js.encode(num_runs, 37.8324, 112.5584, 9);
+		// },
+		// obj_in_cpp: function() { 
+		// 	return obj_repeaters.repeat_in_cpp.encode(num_runs, 37.8324, 112.5584, 9);
+		// },
+		// fn_in_js: function() { 
+		// 	return fn_repeaters.repeat_in_js.encode(num_runs, 37.8324, 112.5584, 9);
+		// },
 	});
-
+	
 	compare_ratios('decodes string to latitude & longitude', {
 		original_in_js: function() { 
 			return orig_repeaters.repeat_in_js.decode(num_runs, 'ww8p1r4t8');
 		},
-		obj_in_js: function() { 
-			return obj_repeaters.repeat_in_js.decode(num_runs, 'ww8p1r4t8');
-		},
-		obj_in_cpp: function() { 
-			return obj_repeaters.repeat_in_cpp.decode(num_runs, 'ww8p1r4t8');
-		},
-		fn_in_js: function() { 
-			return fn_repeaters.repeat_in_js.decode(num_runs, 'ww8p1r4t8');
-		},
 		fn_in_cpp: function() { 
 			return fn_repeaters.repeat_in_cpp.decode(num_runs, 'ww8p1r4t8');
 		},
+		// obj_in_js: function() { 
+		// 	return obj_repeaters.repeat_in_js.decode(num_runs, 'ww8p1r4t8');
+		// },
+		// obj_in_cpp: function() { 
+		// 	return obj_repeaters.repeat_in_cpp.decode(num_runs, 'ww8p1r4t8');
+		// },
+		// fn_in_js: function() { 
+		// 	return fn_repeaters.repeat_in_js.decode(num_runs, 'ww8p1r4t8');
+		// },
 	});
 	
 	compare_ratios('finds neighbor to the north', {
 		original_in_js: function() { 
 			return orig_repeaters.repeat_in_js.neighbor(num_runs, 'dqcjq', [1, 0]);
 		},
-		obj_in_js: function() { 
-			return obj_repeaters.repeat_in_js.neighbor(num_runs, 'dqcjq', [1, 0]);
-		},
-		obj_in_cpp: function() { 
-			return obj_repeaters.repeat_in_cpp.neighbor(num_runs, 'dqcjq', [1, 0]);
-		},
-		fn_in_js: function() { 
-			return fn_repeaters.repeat_in_js.neighbor(num_runs, 'dqcjq', [1, 0]);
-		},
 		fn_in_cpp: function() { 
 			return fn_repeaters.repeat_in_cpp.neighbor(num_runs, 'dqcjq', [1, 0]);
 		},
+		// obj_in_js: function() { 
+		// 	return obj_repeaters.repeat_in_js.neighbor(num_runs, 'dqcjq', [1, 0]);
+		// },
+		// obj_in_cpp: function() { 
+		// 	return obj_repeaters.repeat_in_cpp.neighbor(num_runs, 'dqcjq', [1, 0]);
+		// },
+		// fn_in_js: function() { 
+		// 	return fn_repeaters.repeat_in_js.neighbor(num_runs, 'dqcjq', [1, 0]);
+		// },
 	});
 	
 	compare_ratios('finds neighbor to the south-west', {
 		original_in_js: function() { 
 			return orig_repeaters.repeat_in_js.neighbor(num_runs, 'dqcjq', [-1, - 1]);
 		},
-		obj_in_js: function() { 
-			return obj_repeaters.repeat_in_js.neighbor(num_runs, 'dqcjq', [-1, - 1]);
-		},
-		obj_in_cpp: function() { 
-			return obj_repeaters.repeat_in_cpp.neighbor(num_runs, 'dqcjq', [-1, - 1]);
-		},
-		fn_in_js: function() { 
-			return fn_repeaters.repeat_in_js.neighbor(num_runs, 'dqcjq', [-1, - 1]);
-		},
 		fn_in_cpp: function() { 
 			return fn_repeaters.repeat_in_cpp.neighbor(num_runs, 'dqcjq', [-1, - 1]);
 		},
+		// obj_in_js: function() { 
+		// 	return obj_repeaters.repeat_in_js.neighbor(num_runs, 'dqcjq', [-1, - 1]);
+		// },
+		// obj_in_cpp: function() { 
+		// 	return obj_repeaters.repeat_in_cpp.neighbor(num_runs, 'dqcjq', [-1, - 1]);
+		// },
+		// fn_in_js: function() { 
+		// 	return fn_repeaters.repeat_in_js.neighbor(num_runs, 'dqcjq', [-1, - 1]);
+		// },
 	});
 
 });

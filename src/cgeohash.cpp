@@ -90,7 +90,7 @@ std::string encode(const double latitude, const double longitude, unsigned long 
     std::string hash_string(precision, ' ');
     unsigned int hash_string_length = 0;
 
-    while(hash_string_length< precision) {
+    while(hash_string_length < precision) {
         if (islon) {
             mid = (bbox.maxlon + bbox.minlon) / 2;
             if(longitude > mid) {
@@ -116,7 +116,7 @@ std::string encode(const double latitude, const double longitude, unsigned long 
         if (5 == num_bits) {
             // Append the character to the pre-allocated string
             // This gives us roughly a 2x speed boost
-            // hash_string[hash_string_length] = base32_codes_value_of(hash_index);
+            hash_string[hash_string_length] = base32_codes[hash_index];
 
             hash_string_length++;
             num_bits   = 0;
