@@ -34,12 +34,36 @@
                 "src/cgeohash_bindings.cpp",
                 "src/cgeohash.cpp",
                 "src/cgeohash_fn.cpp",
+                "src/cgeohash_obj.cpp"
+            ], 
+            "target_name": "cgeohash"
+        },
+        {
+            "cflags": [ "-O3" ], 
+            "cflags!": [ "-fno-exceptions" ], 
+            "cflags_cc!": [ "-fno-exceptions" ], 
+            "conditions": [
+                [
+                    "OS=='mac'", 
+                    {
+                        "xcode_settings": {
+                            "GCC_ENABLE_CPP_EXCEPTIONS": "YES"
+                        }
+                    }
+                ]
+            ], 
+            "defines": [ "GEOHASH_ENABLE_SPEED_TESTS=1" ],
+            "include_dirs": ["src"],
+            "sources": [
+                "src/cgeohash_bindings_repeaters.cpp",
+                "src/cgeohash.cpp",
+                "src/cgeohash_fn.cpp",
                 "src/cgeohash_fn_repeaters.cpp",
                 "src/cgeohash_obj.cpp",
                 "src/cgeohash_obj_repeaters.cpp",
                 "src/cgeohash_nanoseconds.cpp"
             ], 
-            "target_name": "cgeohash"
+            "target_name": "cgeohash_speed_tests"
         },
         {
             "cflags": [ "-O3" ], 
@@ -60,10 +84,7 @@
                 "src/cgeohash_bindings.cpp",
                 "src/cgeohash.cpp",
                 "src/cgeohash_fn.cpp",
-                "src/cgeohash_fn_repeaters.cpp",
-                "src/cgeohash_obj.cpp",
-                "src/cgeohash_obj_repeaters.cpp",
-                "src/cgeohash_nanoseconds.cpp"
+                "src/cgeohash_obj.cpp"
             ], 
             "type": "static_library",
             "include_dirs": [
