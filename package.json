@@ -41,7 +41,7 @@
     }, 
     "scripts": {
         "preinstall": "node-gyp configure rebuild", 
-        "test": "node-gyp configure rebuild && VERBOSE=true mocha --recursive --reporter spec ./tests/*.js"
+        "test": "npm install && npm update && node-gyp configure rebuild && VERBOSE=true mocha --recursive --reporter spec ./tests/*.js"
     }, 
-    "version": "1.2.0"
+    "version": "1.2.1"
 }
