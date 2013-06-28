@@ -10,29 +10,15 @@
     "conditions": [
         [
             "OS=='win'", 
-            {
-                "variables": {
-                    "ONI_Root%": "../"
-                }
-            }, 
-            {
-                "variables": {
-                    "ONI_Root%": ""
-                }
-            }
+            { "variables": { "ONI_Root%": "../" } }, 
+            { "variables": { "ONI_Root%": "" } }
         ]
     ], 
     "targets": [
         {
-            "cflags": [
-                "-O3"
-            ], 
-            "cflags!": [
-                "-fno-exceptions"
-            ], 
-            "cflags_cc!": [
-                "-fno-exceptions"
-            ], 
+            "cflags": [ "-O3" ], 
+            "cflags!": [ "-fno-exceptions" ], 
+            "cflags_cc!": [ "-fno-exceptions" ], 
             "conditions": [
                 [
                     "OS=='mac'", 
@@ -56,15 +42,9 @@
             "target_name": "cgeohash"
         },
         {
-            "cflags": [
-                "-O3"
-            ], 
-            "cflags!": [
-                "-fno-exceptions"
-            ], 
-            "cflags_cc!": [
-                "-fno-exceptions"
-            ], 
+            "cflags": [ "-O3" ], 
+            "cflags!": [ "-fno-exceptions" ], 
+            "cflags_cc!": [ "-fno-exceptions" ], 
             "conditions": [
                 [
                     "OS=='mac'", 

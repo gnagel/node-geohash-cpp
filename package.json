@@ -1,32 +1,47 @@
 {
     "author": "Glenn Nagel <glenn@mercury-wireless.com>", 
+    "bin": "./bin/cgeohash-cli.js", 
     "contributors": [
         {
             "email": "classicning@gmail.com", 
             "name": "Sun Ning"
         }
     ], 
-    "dependencies": {}, 
-    "description": "geohash c++ library for nodejs", 
+    "dependencies": {
+        "optimist": "0.3.5"
+    }, 
+    "description": "Node.js C++ & JS-Native GeoHash", 
     "devDependencies": {
         "chai": "1.6.1", 
         "mocha": "1.11.0", 
         "ngeohash": "0.2.0", 
-        "sprintf": "*",
-				"v8-profiler-table": ">=1.2.0"
+        "sprintf": "*", 
+        "v8-profiler-table": ">=1.2.0",
+				"titlecaps": "*"
     }, 
     "engines": {
         "node": ">=v0.8.14"
     }, 
+    "keywords": [
+        "geohash", 
+        "ngeohash", 
+        "native", 
+        "addon", 
+        "module", 
+        "c", 
+        "c++", 
+        "bindings", 
+        "gyp"
+    ], 
     "license": "MIT", 
-    "main": "./geohash", 
+    "main": "./index.js", 
     "name": "cgeohash", 
     "repository": {
         "url": "https://github.com/gnagel/node-geohash-cpp"
     }, 
     "scripts": {
         "preinstall": "node-gyp configure rebuild", 
-        "test": "node-gyp configure rebuild && mocha --recursive --reporter spec ./tests/*.js"
+        "test": "node-gyp configure rebuild && VERBOSE=true mocha --recursive --reporter spec ./tests/*.js"
     }, 
-    "version": "1.0.0"
+    "version": "1.1.0"
 }

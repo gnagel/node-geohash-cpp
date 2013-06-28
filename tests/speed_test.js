@@ -5,6 +5,7 @@ var path              = require('path');
 var mocha             = require('mocha');
 var chai              = require('chai');
 var should            = chai.should();
+var titlecaps         = require('titlecaps').titlecaps;
 var v8_profiler_table = require('v8-profiler-table');
 
 //
@@ -19,8 +20,12 @@ function compare_ratios(tag, timings) {
 			// Log the run-times of the Original and C++ versions
 		v8_profiler_table.record_profile('Original JS Version', timings.original_in_js);
 		v8_profiler_table.record_profile('All C++ Version',     timings.fn_in_cpp);
-		
-		console.log(v8_profiler_table.stringify());
+
+		if (process.env.VERBOSE) {
+			console.log('');
+			console.log('----- [' + titlecaps(tag) + '] -----');
+			console.log(v8_profiler_table.stringify());
+		}
 		
 		it ('Original JS Version', function() {
 			var profile = v8_profiler_table.profiles()['Original JS Version'];
