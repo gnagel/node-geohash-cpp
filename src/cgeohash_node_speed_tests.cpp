@@ -3,8 +3,7 @@
 #include "../includes/cvv8/detail/convert_core.hpp"
 
 #include "cgeohash.hpp"
-#include "cgeohash_fn_repeaters.hpp"
-#include "cgeohash_nanoseconds.hpp"
+#include "cgeohash_node_speed_tests.hpp"
 
 #include <iostream>
 

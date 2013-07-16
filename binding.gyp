@@ -1,12 +1,4 @@
 {
-    "variables": {
-        "library_files": [
-            "lib/cgeohash_obj.js",
-            "lib/cgeohash_fn.js",
-            "lib/cgeohash_obj_speed_tests.js",
-            "lib/cgeohash_fn_speed_tests.js"
-        ]
-    },
     "conditions": [
         [
             "OS=='win'", 
@@ -16,9 +8,17 @@
     ], 
     "targets": [
         {
-            "cflags": [ "-O3" ], 
-            "cflags!": [ "-fno-exceptions" ], 
-            "cflags_cc!": [ "-fno-exceptions" ], 
+          "cflags!": [
+              "-fno-exceptions",
+              "-O3",
+              "-I./includes/cvv8",
+              "-Wno-missing-field-initializers",
+              "-Wno-unused" ],
+          "cflags_cc!": [ 
+              "-fno-exceptions",
+              "-Wno-missing-field-initializers",
+              "-Wno-unused" ],
+          "cflags": [ "-O3" ],
             "conditions": [
                 [
                     "OS=='mac'", 
@@ -31,17 +31,23 @@
             ], 
             "include_dirs": ["src"],
             "sources": [
-                "src/cgeohash_bindings.cpp",
                 "src/cgeohash.cpp",
-                "src/cgeohash_fn.cpp",
-                "src/cgeohash_obj.cpp"
+                "src/cgeohash_node.cpp"
             ], 
             "target_name": "cgeohash"
         },
         {
-            "cflags": [ "-O3" ], 
-            "cflags!": [ "-fno-exceptions" ], 
-            "cflags_cc!": [ "-fno-exceptions" ], 
+          "cflags!": [
+              "-fno-exceptions",
+              "-O3",
+              "-I./includes/cvv8",
+              "-Wno-missing-field-initializers",
+              "-Wno-unused" ],
+          "cflags_cc!": [ 
+              "-fno-exceptions",
+              "-Wno-missing-field-initializers",
+              "-Wno-unused" ],
+          "cflags": [ "-O3" ],
             "conditions": [
                 [
                     "OS=='mac'", 
@@ -57,18 +63,24 @@
             "sources": [
                 "src/cgeohash_bindings_repeaters.cpp",
                 "src/cgeohash.cpp",
-                "src/cgeohash_fn.cpp",
+                "src/cgeohash_node.cpp",
                 "src/cgeohash_fn_repeaters.cpp",
-                "src/cgeohash_obj.cpp",
-                "src/cgeohash_obj_repeaters.cpp",
                 "src/cgeohash_nanoseconds.cpp"
             ], 
             "target_name": "cgeohash_speed_tests"
         },
         {
-            "cflags": [ "-O3" ], 
-            "cflags!": [ "-fno-exceptions" ], 
-            "cflags_cc!": [ "-fno-exceptions" ], 
+          "cflags!": [
+              "-fno-exceptions",
+              "-O3",
+              "-I./includes/cvv8",
+              "-Wno-missing-field-initializers",
+              "-Wno-unused" ],
+          "cflags_cc!": [ 
+              "-fno-exceptions",
+              "-Wno-missing-field-initializers",
+              "-Wno-unused" ],
+          "cflags": [ "-O3" ],
             "conditions": [
                 [
                     "OS=='mac'", 
@@ -81,10 +93,8 @@
             ], 
             "include_dirs": ["src"],
             "sources": [
-                "src/cgeohash_bindings.cpp",
                 "src/cgeohash.cpp",
-                "src/cgeohash_fn.cpp",
-                "src/cgeohash_obj.cpp"
+                "src/cgeohash_node.cpp"
             ], 
             "type": "static_library",
             "include_dirs": [

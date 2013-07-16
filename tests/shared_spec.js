@@ -39,6 +39,10 @@ function encode_latitude_and_longitude_as_string(geohash) {
 	return geohash.encode(latitude, longitude, 9);
 }
 
+function encode_latitude_and_longitude_as_string_for_all_precisions(geohash) {
+	return geohash.encode_all_precisions(latitude, longitude);
+}
+
 function decodes_string_to_bounded_box(geohash) {
 	return geohash.decode_bbox('ww8p1r4t8');
 }
@@ -67,6 +71,22 @@ module.exports = function(tag, geohash) {
 		it('encodes latitude & longitude as string', function() {
 			encode_latitude_and_longitude_as_string(geohash)
 				.should.equal(geostr);
+		});
+
+		it('encodes latitude & longitude as string for all precisions', function() {
+			var actual = geohash.encode_all_precisions(latitude, longitude);
+			var expected = [
+			geohash.encode(latitude, longitude, 1),
+			geohash.encode(latitude, longitude, 2),
+			geohash.encode(latitude, longitude, 3),
+			geohash.encode(latitude, longitude, 4),
+			geohash.encode(latitude, longitude, 5),
+			geohash.encode(latitude, longitude, 6),
+			geohash.encode(latitude, longitude, 7),
+			geohash.encode(latitude, longitude, 8),
+			geohash.encode(latitude, longitude, 9)];
+
+			chai.assert.deepEqual(actual, expected);
 		});
 
 		it('decodes string to bounded box', function() {

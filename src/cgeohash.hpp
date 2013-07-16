@@ -3,8 +3,10 @@
 
 #include <node.h>
 #include <string>
+#include <vector>
 
-namespace cgeohash {
+namespace cgeohash
+{
 
 struct DecodedBBox {
     double minlat, minlon, maxlat, maxlon;
@@ -21,10 +23,17 @@ struct DecodedHash {
 // Encode a pair of latitude and longitude into geohash
 std::string encode(const double latitude, const double longitude, const unsigned long precision);
 
+// Encode a pair of latitude and longitude into geohash
+// All Precisions from [1 to 9] (inclusive)
+void encode_all_precisions(
+    const double latitude,
+    const double longitude,
+    std::vector<std::string> & output);
+
 // Decode a hash string into pair of latitude and longitude
 DecodedHash decode(const std::string & hash_string);
 
-// Decode hashstring into a bound box matches it 
+// Decode hashstring into a bound box matches it
 DecodedBBox decode_bbox(const std::string & hash_string);
 
 // Find neighbor of a geohash string in certain direction.
