@@ -78,7 +78,7 @@ int base32_codes_index_of(char c)
     return base32_indexes.find(c)->second;
 }
 
-std::string encode(const double latitude, const double longitude, unsigned long precision)
+void encode(const double latitude, const double longitude, unsigned long precision, string_type & output)
 {
     // DecodedBBox for the lat/lon + errors
     DecodedBBox bbox;
@@ -92,10 +92,10 @@ std::string encode(const double latitude, const double longitude, unsigned long 
     int    hash_index = 0;
 
     // Pre-Allocate the hash string
-    std::string hash_string(precision, ' ');
-    unsigned int hash_string_length = 0;
+    output = string_type(precision, ' ');
+    unsigned int output_length = 0;
 
-    while(hash_string_length < precision) {
+    while(output_length < precision) {
         if (islon) {
             mid = (bbox.maxlon + bbox.minlon) / 2;
             if(longitude > mid) {
@@ -121,15 +121,13 @@ std::string encode(const double latitude, const double longitude, unsigned long 
         if (5 == num_bits) {
             // Append the character to the pre-allocated string
             // This gives us roughly a 2x speed boost
-            hash_string[hash_string_length] = base32_codes[hash_index];
+            output[output_length] = base32_codes[hash_index];
 
-            hash_string_length++;
+            output_length++;
             num_bits   = 0;
             hash_index = 0;
         }
     }
-
-    return hash_string;
 };
 
 
@@ -139,22 +137,23 @@ std::string encode(const double latitude, const double longitude, unsigned long 
 void encode_all_precisions(
     const double latitude,
     const double longitude,
-    std::vector<std::string> & output)
+    std::vector<string_type> & output)
 {
     output.clear();
     output.reserve(9);
-    const string_type buffer(encode(latitude, longitude, 9));
+    string_type buffer;
+    encode(latitude, longitude, 9, buffer);
 
     for(size_t i = 0; i < 9; i++) {
         output.push_back(buffer.substr(0, i+1));
     }
 };
 
-DecodedBBox decode_bbox(const std::string & _hash_string)
+DecodedBBox decode_bbox(const string_type & _hash_string)
 {
     // Copy of the string down-cased
     // Wish this was ruby, then it would be simple: _hash_string.downcase();
-    std::string hash_string(_hash_string);
+    string_type hash_string(_hash_string);
     std::transform(
         _hash_string.begin(),
         _hash_string.end(),
@@ -195,7 +194,7 @@ DecodedBBox decode_bbox(const std::string & _hash_string)
     return output;
 }
 
-DecodedHash decode(const std::string & hash_string)
+DecodedHash decode(const string_type & hash_string)
 {
     DecodedBBox bbox = decode_bbox(hash_string);
     DecodedHash output;
@@ -206,17 +205,20 @@ DecodedHash decode(const std::string & hash_string)
     return output;
 };
 
-std::string neighbor(const std::string & hash_string, const int direction [])
+string_type neighbor(const string_type & hash_string, const int direction [])
 {
     // Adjust the DecodedHash for the direction of the neighbors
     DecodedHash lonlat = decode(hash_string);
     lonlat.latitude   += direction[0] * lonlat.latitude_err * 2;
     lonlat.longitude  += direction[1] * lonlat.longitude_err * 2;
 
-    return encode(
-               lonlat.latitude,
-               lonlat.longitude,
-               hash_string.length());
+    string_type output;
+    encode(
+        lonlat.latitude,
+        lonlat.longitude,
+        hash_string.length(),
+        output);
+    return output;
 }
 
 } // end namespace cgeohash

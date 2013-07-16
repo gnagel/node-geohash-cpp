@@ -40,8 +40,8 @@
         "url": "https://github.com/gnagel/node-geohash-cpp"
     }, 
     "scripts": {
-        "preinstall": "node-gyp configure rebuild", 
-        "test": "npm install && npm update && node-gyp configure rebuild && VERBOSE=true mocha --recursive --reporter spec ./tests/*.js"
+        "postinstall": "node-gyp configure rebuild", 
+        "test": "npm install && npm update && node-gyp configure rebuild && mocha --reporter spec ./tests/shared_spec.js && mocha --reporter spec ./tests/speed_spec.js | grep Total | sort | tee -a ./speeds.log; date >>  ./speeds.log"
     }, 
     "version": "1.2.2"
 }

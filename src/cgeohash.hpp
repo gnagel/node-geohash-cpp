@@ -23,7 +23,7 @@ struct DecodedHash {
 };
 
 // Encode a pair of latitude and longitude into geohash
-string_type encode(const double latitude, const double longitude, const unsigned long precision);
+void encode(const double latitude, const double longitude, const unsigned long precision, string_type & output);
 
 // Encode a pair of latitude and longitude into geohash
 // All Precisions from [1 to 9] (inclusive)

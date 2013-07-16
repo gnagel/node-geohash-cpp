@@ -23,7 +23,7 @@ v8::Handle<v8::Value> encode_fn(const v8::Arguments& args)
 
     string_type output;
     for(size_t i = 0; i < num_times; ++i) {
-        output = encode(latitude, longitude, precision);
+        encode(latitude, longitude, precision, output);
     }
 
     return scope.Close(cvv8::CastToJS<string_type>(output));

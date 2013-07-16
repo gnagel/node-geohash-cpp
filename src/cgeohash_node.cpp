@@ -20,7 +20,7 @@ v8::Handle<v8::Value> encode_fn(const v8::Arguments& args)
     const uint32_t precision = cvv8::CastFromJS< uint32_t >(args[i++]);
 
     string_type output;
-        output = encode(latitude, longitude, precision);
+    encode(latitude, longitude, precision, output);
 
     return scope.Close(cvv8::CastToJS<string_type>(output));
 }
@@ -51,7 +51,7 @@ v8::Handle<v8::Value> decode_fn(const v8::Arguments& args)
 
     int i = 0;
     const string_type hash_string = cvv8::CastFromJS<string_type>(args[i++]);
-		REQUIRES_STRING_IS_NOT_EMPTY(0, hash_string);
+    REQUIRES_STRING_IS_NOT_EMPTY(0, hash_string);
 
     const DecodedHash decoded_hash = decode(hash_string);
 
@@ -86,7 +86,7 @@ v8::Handle<v8::Value> decode_bbox_fn(const v8::Arguments& args)
 
     int i = 0;
     const string_type hash_string = cvv8::CastFromJS<string_type>(args[i++]);
-		REQUIRES_STRING_IS_NOT_EMPTY(0, hash_string);
+    REQUIRES_STRING_IS_NOT_EMPTY(0, hash_string);
 
     DecodedBBox decoded_bbox = decode_bbox(hash_string);
     std::list<double> list;
@@ -108,7 +108,7 @@ v8::Handle<v8::Value> neighbor_fn(const v8::Arguments& args)
     int i = 0;
     const string_type hash_string = cvv8::CastFromJS<string_type>(args[i++]);
     const int_vector  directions  = cvv8::CastFromJS< int_vector >(args[i++]);
-		REQUIRES_STRING_IS_NOT_EMPTY(0, hash_string);
+    REQUIRES_STRING_IS_NOT_EMPTY(0, hash_string);
     if (directions.size() != 2) {
         return THROW_EXCEPTION("Parameter 1 must be an array with 2 numbers");
     }

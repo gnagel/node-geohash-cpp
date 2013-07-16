@@ -10,3 +10,4 @@
 .wafpickle-*
 CVS
 npm-debug.log
+*.log
