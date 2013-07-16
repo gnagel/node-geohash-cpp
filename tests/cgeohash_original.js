@@ -146,6 +146,7 @@ var neighbor = function(hashstring, direction) {
 
 var geohash = {
     'encode': encode,
+		'encode_all_precisions': encode_all_precisions,
     'decode': decode,
     'decode_bbox': decode_bbox,
     'neighbor': neighbor,

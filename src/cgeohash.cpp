@@ -143,61 +143,10 @@ void encode_all_precisions(
 {
     output.clear();
     output.reserve(9);
+    const string_type buffer(encode(latitude, longitude, 9));
 
-    // DecodedBBox for the lat/lon + errors
-    DecodedBBox bbox;
-    bbox.maxlat = 90;
-    bbox.maxlon = 180;
-    bbox.minlat = -90;
-    bbox.minlon = -180;
-    double mid        = 0;
-    bool   islon      = true;
-    int    num_bits   = 0;
-    int    hash_index = 0;
-
-    // Pre-Allocate the hash string
-    const size_t max_precision = 9;
-    std::string buffer(max_precision, ' ');
-
-    unsigned int buffer_length = 0;
-    while(buffer_length < max_precision) {
-        if (islon) {
-            mid = (bbox.maxlon + bbox.minlon) / 2;
-            if(longitude > mid) {
-                hash_index = (hash_index << 1) + 1;
-                bbox.minlon=mid;
-            } else {
-                hash_index = (hash_index << 1) + 0;
-                bbox.maxlon=mid;
-            }
-        } else {
-            mid = (bbox.maxlat + bbox.minlat) / 2;
-            if(latitude > mid ) {
-                hash_index = (hash_index << 1) + 1;
-                bbox.minlat = mid;
-            } else {
-                hash_index = (hash_index << 1) + 0;
-                bbox.maxlat = mid;
-            }
-        }
-        islon = !islon;
-
-        ++num_bits;
-        if (5 == num_bits) {
-            // Append the character to the pre-allocated string
-            // This gives us roughly a 2x speed boost
-            buffer[buffer_length] = base32_codes[hash_index];
-
-            // Insert the buffer into the output
-            output[buffer_length] = buffer;
-
-            // Increment the buffer size value
-            buffer_length++;
-
-            // Reset the flags
-            num_bits   = 0;
-            hash_index = 0;
-        }
+    for(size_t i = 0; i < 9; i++) {
+        output.push_back(buffer.substr(0, i+1));
     }
 };
 
@@ -271,3 +220,4 @@ std::string neighbor(const std::string & hash_string, const int direction [])
 }
 
 } // end namespace cgeohash
+

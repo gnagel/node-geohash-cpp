@@ -17,6 +17,9 @@ namespace cgeohash
 typedef std::string string_type;
 typedef std::vector<string_type> string_vector;
 
+typedef std::list<int> int_list;
+typedef std::vector<int> int_vector;
+
 typedef std::list<double> double_list;
 typedef std::vector<double> double_vector;
 
@@ -29,7 +32,7 @@ typedef std::vector<double> double_vector;
 }
 
 #define REQUIRES_PARAM_LENGTH(LENGTH) \
-  if (run_utils::ArgsLengthIsNot(args, LENGTH)) { \
+  if (args.Length() != LENGTH) { \
 			std::ostringstream msg; \
 			msg << __FILE__ << ":" << __LINE__ << " @ "; \
 			msg << "Requires " << LENGTH << " parameters, not " << args.Length(); string_type msg_value = msg.str(); \
@@ -37,42 +40,55 @@ typedef std::vector<double> double_vector;
   }
 
 #define REQUIRES_PARAM_IS_STRING(INDEX) \
-  if (run_utils::ArgsIsNotString(args, INDEX)) { \
+	if(args[INDEX].IsEmpty() || !args[INDEX]->IsString()) { \
 		std::ostringstream msg; \
 		msg << __FILE__ << ":" << __LINE__ << " @ "; \
-		msg << run_utils::BuildArgsTypeError(args, INDEX, "string");\
+		msg << "Requires param[" << INDEX << " is a string!";\
 		string_type msg_value = msg.str(); \
     return ThrowException(v8::Exception::Error(v8::String::New(msg_value.c_str()))); \
   }
 
 #define REQUIRES_PARAM_IS_ARRAY(INDEX) \
-  if (run_utils::ArgsIsNotArray(args, INDEX)) { \
+	if(args[INDEX].IsEmpty() || !args[INDEX]->IsArray()) { \
 		std::ostringstream msg; \
 		msg << __FILE__ << ":" << __LINE__ << " @ "; \
-		msg << run_utils::BuildArgsTypeError(args, INDEX, "array");\
-			string_type msg_value = msg.str(); \
+		msg << "Requires param[" << INDEX << " is a array";\
+		string_type msg_value = msg.str(); \
     return ThrowException(v8::Exception::Error(v8::String::New(msg_value.c_str()))); \
   }
 
 #define REQUIRES_PARAM_IS_NUMBER(INDEX) \
-  if (run_utils::ArgsIsNotNumber(args, INDEX)) { \
+	if(args[INDEX].IsEmpty() || !args[INDEX]->IsNumber()) { \
 		std::ostringstream msg; \
 		msg << __FILE__ << ":" << __LINE__ << " @ "; \
-		msg << run_utils::BuildArgsTypeError(args, INDEX, "number");\
-			string_type msg_value = msg.str(); \
+		msg << "Requires param[" << INDEX << " is a number";\
+		string_type msg_value = msg.str(); \
     return ThrowException(v8::Exception::Error(v8::String::New(msg_value.c_str()))); \
   }
 
 #define REQUIRES_PARAM_IS_OBJECT(INDEX) \
-  if (run_utils::ArgsIsNotObject(args, INDEX)) { \
+	if(args[INDEX].IsEmpty() || !args[INDEX]->IsObject()) { \
 		std::ostringstream msg; \
 		msg << __FILE__ << ":" << __LINE__ << " @ "; \
-		msg << run_utils::BuildArgsTypeError(args, INDEX, "object"); \
-			string_type msg_value = msg.str(); \
+		msg << "Requires param[" << INDEX << " is a object"; \
+		string_type msg_value = msg.str(); \
+    return ThrowException(v8::Exception::Error(v8::String::New(msg_value.c_str()))); \
+  }
+
+
+#define REQUIRES_STRING_IS_NOT_EMPTY(INDEX, VALUE) \
+  if (VALUE.empty()) { \
+		std::ostringstream msg; \
+		msg << __FILE__ << ":" << __LINE__ << " @ "; \
+		msg << "Requires param[" << INDEX << " is a string";\
+		msg << " and is not empty"; \
+		string_type msg_value = msg.str(); \
     return ThrowException(v8::Exception::Error(v8::String::New(msg_value.c_str()))); \
   }
 
 #define RETHROW_EXCEPTION(e)  ThrowException(v8::Exception::Error(v8::String::New(e.what())));
+
+#define THROW_EXCEPTION(msg)  ThrowException(v8::Exception::Error(v8::String::New(msg)));
 
 }
 

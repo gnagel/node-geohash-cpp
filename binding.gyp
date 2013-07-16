@@ -1,4 +1,7 @@
 {
+  "target_defaults": {
+    "include_dirs": ["./includes"]
+  },
     "conditions": [
         [
             "OS=='win'", 
@@ -61,11 +64,8 @@
             "defines": [ "GEOHASH_ENABLE_SPEED_TESTS=1" ],
             "include_dirs": ["src"],
             "sources": [
-                "src/cgeohash_bindings_repeaters.cpp",
-                "src/cgeohash.cpp",
-                "src/cgeohash_node.cpp",
-                "src/cgeohash_fn_repeaters.cpp",
-                "src/cgeohash_nanoseconds.cpp"
+                "src/cgeohash_node_speed_tests.cpp",
+                "src/cgeohash.cpp"
             ], 
             "target_name": "cgeohash_speed_tests"
         },

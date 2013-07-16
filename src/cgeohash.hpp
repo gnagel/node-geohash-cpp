@@ -7,6 +7,8 @@
 
 namespace cgeohash
 {
+typedef std::string string_type;
+typedef std::vector<string_type> string_vector;
 
 struct DecodedBBox {
     double minlat, minlon, maxlat, maxlon;
@@ -21,7 +23,7 @@ struct DecodedHash {
 };
 
 // Encode a pair of latitude and longitude into geohash
-std::string encode(const double latitude, const double longitude, const unsigned long precision);
+string_type encode(const double latitude, const double longitude, const unsigned long precision);
 
 // Encode a pair of latitude and longitude into geohash
 // All Precisions from [1 to 9] (inclusive)

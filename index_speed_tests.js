@@ -1,4 +1,4 @@
-var cgeohash = require('./build/Release/cgeohash');
+var cgeohash = require('./build/Release/cgeohash_speed_tests');
 
 module.exports = {
     encode:                cgeohash.encode_fn,

@@ -15,37 +15,39 @@ var repeats_callback_wrapper = require('v8-profiler-table').repeats_callback_wra
 
 // Alias the <...>_obj methods to the expected <...> method names
 // Loop in JS and record the seconds / call
-var cgeohash_original_repeat_js = {
-	encode: function(num_times, latitude, longitude, numberOfChars) {
+module.exports = {
+	encode: function(latitude, longitude, numberOfChars, num_times) {
 		var loop = repeats_callback_wrapper(num_times, function() {
 			return cgeohash_original.encode(latitude, longitude, numberOfChars);
 		});
 		return loop();
 	},
 
-	decode: function(num_times, hash_string) {
+	encode_all_precisions: function(latitude, longitude, num_times) {
+		var loop = repeats_callback_wrapper(num_times, function() {
+			return cgeohash_original.encode_all_precisions(latitude, longitude);
+		});
+		return loop();
+	},
+
+	decode: function(hash_string, num_times) {
 		var loop = repeats_callback_wrapper(num_times, function() {
 			return cgeohash_original.decode(hash_string);
 		});
 		return loop();
 	},
 
-	decode_bbox: function(num_times, hash_string) {
+	decode_bbox: function(hash_string, num_times) {
 		var loop = repeats_callback_wrapper(num_times, function() {
 			return cgeohash_original.decode_bbox(hash_string);
 		});
 		return loop();
 	},
 
-	neighbor: function(num_times, hash_string, direction) {
+	neighbor: function(hash_string, direction, num_times) {
 		var loop = repeats_callback_wrapper(num_times, function() {
 			return cgeohash_original.neighbor(hash_string, direction);
 		});
 		return loop();
 	},
-};
-
-module.exports = {
-	repeat_in_js:  cgeohash_original_repeat_js,
-	repeat_in_cpp: undefined, // Not available
 };
