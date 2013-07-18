@@ -33,6 +33,33 @@ var shared_spec = function(tag, geohash) {
 			chai.assert.deepEqual(actual, expected);
 		});
 
+		it('encodes latitude & longitude as string for a range of precisions [min, max] (inclusive)', function() {
+			var actual = geohash.encode_range_precisions(latitude, longitude, 2, 7);
+			var expected = [
+			geohash.encode(latitude, longitude, 2),
+			geohash.encode(latitude, longitude, 3),
+			geohash.encode(latitude, longitude, 4),
+			geohash.encode(latitude, longitude, 5),
+			geohash.encode(latitude, longitude, 6),
+			geohash.encode(latitude, longitude, 7)];
+
+			chai.assert.deepEqual(expected.length, 6);
+			chai.assert.deepEqual(actual.length, 6);
+			var i = 0;
+			// 2
+			chai.assert.deepEqual(actual[i], expected[i]); i++;
+			// 3
+			chai.assert.deepEqual(actual[i], expected[i]); i++;
+			// 4
+			chai.assert.deepEqual(actual[i], expected[i]); i++;
+			// 5
+			chai.assert.deepEqual(actual[i], expected[i]); i++;
+			// 6
+			chai.assert.deepEqual(actual[i], expected[i]); i++;
+			// 7
+			chai.assert.deepEqual(actual[i], expected[i]); i++;
+		});
+
 		it('decodes string to bounded box', function() {
 			// Round the numbers to integers and compare them
 			var rounding_match = function(actual, expected, index) {

@@ -32,6 +32,16 @@ void encode_all_precisions(
     const double longitude,
     std::vector<std::string> & output);
 
+// Encode a pair of latitude and longitude into geohash
+// All Precisions from [min to max] (inclusive)
+void encode_range_precisions(
+    const double latitude,
+    const double longitude,
+    const size_t min,
+    const size_t max,
+    std::vector<string_type> & output);
+
+
 // Decode a hash string into pair of latitude and longitude
 DecodedHash decode(const std::string & hash_string);
 

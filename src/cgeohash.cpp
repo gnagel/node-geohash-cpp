@@ -139,13 +139,30 @@ void encode_all_precisions(
     const double longitude,
     std::vector<string_type> & output)
 {
-    output.clear();
-    output.reserve(9);
-    string_type buffer;
-    encode(latitude, longitude, 9, buffer);
+	encode_range_precisions(latitude, longitude, 1, 9, output);
+};
 
-    for(size_t i = 0; i < 9; i++) {
-        output.push_back(buffer.substr(0, i+1));
+// Encode a pair of latitude and longitude into geohash
+// All Precisions from [min to max] (inclusive)
+void encode_range_precisions(
+    const double latitude,
+    const double longitude,
+		const size_t min,
+		const size_t max,
+    std::vector<string_type> & output)
+{
+		const size_t num_precisions = max - min + 1;
+    output.resize(num_precisions);
+
+    string_type buffer;
+    encode(latitude, longitude, max, buffer);
+		
+		// Set the "end" value
+		output[num_precisions - 1] = buffer;
+
+    for(int i = num_precisions - 2; i >= 0; --i) {
+			const string_type & last = output[i+1];
+			output[i] = last.substr(0, last.length() -1);
     }
 };
 

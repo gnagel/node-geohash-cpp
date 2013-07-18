@@ -43,6 +43,28 @@ v8::Handle<v8::Value> encode_all_precisions_fn(const v8::Arguments& args)
     return scope.Close(cvv8::CastToJS<string_vector>(output));
 }
 
+// Node.JS Hooks to GeoHash encoding
+v8::Handle<v8::Value> encode_range_precisions_fn(const v8::Arguments& args)
+{
+    v8::HandleScope scope;
+    REQUIRES_PARAM_LENGTH(4);
+    REQUIRES_PARAM_IS_NUMBER(0);
+    REQUIRES_PARAM_IS_NUMBER(1);
+    REQUIRES_PARAM_IS_NUMBER(2);
+    REQUIRES_PARAM_IS_NUMBER(3);
+
+    int i = 0;
+    const double latitude  = cvv8::CastFromJS< double >(args[i++]);
+    const double longitude = cvv8::CastFromJS< double >(args[i++]);
+    const size_t min       = cvv8::CastFromJS< size_t >(args[i++]);
+    const size_t max       = cvv8::CastFromJS< size_t >(args[i++]);
+
+    string_vector output;
+    encode_range_precisions(latitude, longitude, min, max, output);
+
+    return scope.Close(cvv8::CastToJS<string_vector>(output));
+}
+
 v8::Handle<v8::Value> decode_fn(const v8::Arguments& args)
 {
     v8::HandleScope scope;
@@ -126,6 +148,7 @@ void RegisterModule(v8::Handle<v8::Object> target)
 {
     node::SetMethod(target, "encode_fn",      encode_fn);
     node::SetMethod(target, "encode_all_precisions_fn",      encode_all_precisions_fn);
+    node::SetMethod(target, "encode_range_precisions_fn",      encode_range_precisions_fn);
     node::SetMethod(target, "decode_fn",      decode_fn);
     node::SetMethod(target, "decode_bbox_fn", decode_bbox_fn);
     node::SetMethod(target, "neighbor_fn",    neighbor_fn);

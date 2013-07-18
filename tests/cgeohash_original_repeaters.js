@@ -30,6 +30,13 @@ module.exports = {
 		return loop();
 	},
 
+	encode_range_precisions: function(latitude, longitude, min, max, num_times) {
+		var loop = repeats_callback_wrapper(num_times, function() {
+			return cgeohash_original.encode_range_precisions(latitude, longitude, min, max);
+		});
+		return loop();
+	},
+
 	decode: function(hash_string, num_times) {
 		var loop = repeats_callback_wrapper(num_times, function() {
 			return cgeohash_original.decode(hash_string);
