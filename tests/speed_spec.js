@@ -3,6 +3,7 @@ var mocha = require('mocha');
 var chai = require('chai');
 var should = chai.should();
 
+var precision = 12;
 var longitude = 112.5584;
 var latitude = 37.8324;
 var geo_str = 'ww8p1r4t8';
@@ -11,7 +12,7 @@ var geo_neighbor = 'dqcjq';
 var sprintf = require('sprintf')
 	.sprintf;
 
-var format_tag = "\n[%-30s][%-5s]\t MS Per/Call %.4f (ms)\t Total for %d Calls = %5f (ms)";
+var format_tag = "\n[%-30s][%-12s]\t MS Per/Call %.4f (ms)\t Total for %d Calls = %5f (ms)";
 
 var log_times = function(num_loops, class_name, operation_name, start, end) {
 	var total = (end - start) * 1.0;
@@ -29,7 +30,7 @@ var speed_spec = function(tag, geohash) {
 	describe(tag + ' - Input Checks', function() {
 		it('encodes latitude & longitude as string', function() {
 			var start = new Date();
-			geohash.encode(latitude, longitude, 9, num_loops);
+			geohash.encode(latitude, longitude, precision, num_loops);
 			log_times(num_loops, tag, 'encode', start, new Date());
 		});
 
@@ -66,6 +67,6 @@ var speed_spec = function(tag, geohash) {
 };
 
 describe('Geo Hash Speed Tests', function() {
-	speed_spec('C++', require('../index_speed_tests.js'));
-	speed_spec('JS', require('./cgeohash_original_repeaters.js'));
+	speed_spec('cgeohash', require('../index_speed_tests.js'));
+	speed_spec('ngeohash', require('./cgeohash_original_repeaters.js'));
 });
