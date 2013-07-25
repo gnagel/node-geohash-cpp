@@ -43,5 +43,5 @@
         "postinstall": "node-gyp configure rebuild", 
         "test": "npm install && npm update && node-gyp configure build && mocha --reporter spec ./tests/shared_spec.js && mocha --reporter spec ./tests/speed_spec.js | grep Total | sort | tee -a ./speeds.log; date >>  ./speeds.log"
     }, 
-    "version": "1.4.0"
+    "version": "1.5.0"
 }

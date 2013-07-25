@@ -1,6 +1,10 @@
 #include "cgeohash_requires_params.hpp"
 #include "cgeohash.hpp"
 #include "cgeohash_node.hpp"
+#include <math.h>
+#include <string.h>
+#include <sstream>
+#include <iostream>
 
 namespace cgeohash
 {
@@ -144,14 +148,72 @@ v8::Handle<v8::Value> neighbor_fn(const v8::Arguments& args)
     return scope.Close(cvv8::CastToJS<string_type>(neighbor_string));
 }
 
+void encode_the_point(const char * csv_format, char * csv_buffer, size_t csv_limit, double latitude, double longitude, size_t precision)
+{
+    string_type buffer;
+    encode(latitude, longitude, precision, buffer);
+
+    for(size_t i = 0; i < csv_limit; i++) {
+        csv_buffer[i] = 0;
+    }
+    sprintf(csv_buffer, csv_format, latitude, longitude, precision, buffer.c_str());
+
+    std::cout << csv_buffer << std::endl;
+	}
+
+v8::Handle<v8::Value> encode_the_world_fn(const v8::Arguments& args)
+{
+    v8::HandleScope scope;
+    REQUIRES_PARAM_LENGTH(2);
+    REQUIRES_PARAM_IS_NUMBER(0);
+    REQUIRES_PARAM_IS_NUMBER(1);
+
+    int i = 0;
+    const size_t precision      = cvv8::CastFromJS< size_t >(args[i++]);
+    const size_t decimal_places = cvv8::CastFromJS< size_t >(args[i++]);
+    const double increment_amount = 1.0 / pow((double)10.0, (double)decimal_places);
+
+    string_type csv_format;
+    {
+        std::stringstream format;
+        format << "%02.10f,%03.10f,%02d,\%";
+        format << precision;
+        format << "s";
+        csv_format = format.str();
+    }
+
+    const size_t csv_limit = 100; // (12+1+1) + (13+1+1) + (2+1) + decimal_places + 1;
+    char csv_buffer[100];
+
+    // Longitude has a min/max 2x that of Latitude
+    double latitude = -90.0;
+    double longitude = -180.0;
+		
+		std::cout << "latitude,longitude,precision,geohash" << std::endl;
+    for(; latitude <= 90 && longitude <= 180;) {
+        encode_the_point(csv_format.c_str(), csv_buffer, csv_limit, latitude, longitude, precision);
+
+        latitude += increment_amount;
+        longitude += increment_amount * 2;
+    }
+	
+    if (!((int)latitude > 90 && (int)longitude > 180)) {
+        encode_the_point(csv_format.c_str(), csv_buffer, csv_limit, 90.0, 180.0, precision);
+    }
+
+    return scope.Close(v8::Undefined());
+}
+
+
 void RegisterModule(v8::Handle<v8::Object> target)
 {
-    node::SetMethod(target, "encode_fn",      encode_fn);
-    node::SetMethod(target, "encode_all_precisions_fn",      encode_all_precisions_fn);
-    node::SetMethod(target, "encode_range_precisions_fn",      encode_range_precisions_fn);
-    node::SetMethod(target, "decode_fn",      decode_fn);
-    node::SetMethod(target, "decode_bbox_fn", decode_bbox_fn);
-    node::SetMethod(target, "neighbor_fn",    neighbor_fn);
+    node::SetMethod(target, "encode_fn",                  encode_fn);
+    node::SetMethod(target, "encode_the_world_fn",        encode_the_world_fn);
+    node::SetMethod(target, "encode_all_precisions_fn",   encode_all_precisions_fn);
+    node::SetMethod(target, "encode_range_precisions_fn", encode_range_precisions_fn);
+    node::SetMethod(target, "decode_fn",                  decode_fn);
+    node::SetMethod(target, "decode_bbox_fn",             decode_bbox_fn);
+    node::SetMethod(target, "neighbor_fn",                neighbor_fn);
 }
 
 }
