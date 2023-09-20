@@ -59,7 +59,7 @@ const std::map<char, int> build_base32_indexes()
 {
     std::map<char, int> output;
 
-    for(int i = 0, max = 36; i < max; i++) {
+    for(int i = 0, max = 32; i < max; i++) {
         output.insert( std::pair<char, int>(base32_codes[i], i) );
     }
 
